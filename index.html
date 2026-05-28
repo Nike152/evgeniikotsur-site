@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Евгений + Ирина · ИИ-ассистенты для проектной документации</title>
+
+  <!-- Шрифт Inter (Google Fonts), кириллица -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap&subset=cyrillic,cyrillic-ext,latin" rel="stylesheet">
+
+  <!-- Tailwind CSS v4 (browser-режим, без сборки) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- Иконки Lucide (UMD) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg: #FAFAF7;
+      --bg-2: #F2EFE8;
+      --surface: #FFFFFF;
+      --ink: #1A1A1A;
+      --ink-2: #5A5A5A;
+      --ink-3: #9A968B;
+      --rule: #E5E1D6;
+      --accent: #E25822;
+      --accent-2: #ff930f;
+      --accent-3: #C8451A;
+      --accent-4: #f4b942;
+      --r-sm: 8px;
+      --r-md: 10px;
+      --r-lg: 12px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-weight: 400;
+      background: var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.55;
+    }
+    h1, h2, h3, h4 {
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      margin: 0;
+    }
+    p { margin: 0; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* ===== Nav ===== */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(250, 250, 247, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 32px;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .logo {
+      font-weight: 700; font-size: 16px; letter-spacing: -0.01em;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .logo-dot {
+      width: 10px; height: 10px; border-radius: 2px;
+      background: var(--accent);
+      display: inline-block;
+    }
+    .nav-links {
+      display: flex; gap: 36px;
+      font-size: 14px; color: var(--ink-2);
+      font-weight: 500;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px;
+      background: var(--ink); color: var(--bg);
+      border-radius: var(--r-sm);
+      font-size: 14px; font-weight: 500;
+      border: none;
+      transition: background 0.15s;
+    }
+    .nav-cta:hover { background: #000; }
+
+    /* ===== CTA-кнопка в стиле adamgiebl (uiverse), цвета адаптированы под акцент ===== */
+    .btn-blob {
+      position: relative;
+      display: inline-block;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 999px;
+      padding: 0;
+      width: auto;
+      min-width: 16em;
+      height: 3.4em;
+      z-index: 1;
+      color: #fff;
+      cursor: pointer;
+      overflow: hidden;
+      border: none;
+      background: transparent;
+      letter-spacing: -0.005em;
+      text-align: center;
+    }
+    .btn-blob__text {
+      position: absolute;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border-radius: 999px;
+      background: linear-gradient(rgba(255, 255, 255, 0.40), rgba(150, 150, 150, 0.18));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1;
+    }
+    .btn-blob__text .icon { width: 18px; height: 18px; }
+    .btn-blob__blob {
+      position: absolute;
+      z-index: 0;
+      border-radius: 50%;
+      width: 5em;
+      height: 3em;
+      transition: transform 0.35s ease-in-out, background 0.35s ease-in-out;
+      pointer-events: none;
+    }
+    .btn-blob__blob:nth-child(2) { left: -0.5em; top: 0;     background: var(--accent-2); }
+    .btn-blob__blob:nth-child(3) { left: 25%;    top: 0;     background: var(--accent);   }
+    .btn-blob__blob:nth-child(4) { left: 55%;    top: -1em;  background: var(--accent-3); }
+    .btn-blob__blob:nth-child(5) { left: 75%;    top: 1.6em; background: var(--accent-4); }
+    .btn-blob:hover .btn-blob__blob:nth-child(2) { background: var(--accent-3); }
+    .btn-blob:hover .btn-blob__blob:nth-child(3) { background: var(--accent-4); }
+    .btn-blob:hover .btn-blob__blob:nth-child(4) { background: var(--accent-2); }
+    .btn-blob:hover .btn-blob__blob:nth-child(5) { background: var(--accent);   }
+    .btn-blob:hover .btn-blob__blob { transform: scale(1.3); }
+    .btn-blob:active { box-shadow: inset 0 0 0 2px rgba(255,255,255,0.65); }
+    .btn-blob--lg {
+      font-size: 18px;
+      height: 3.8em;
+      min-width: 18em;
+    }
+    .btn-blob--lg .btn-blob__text .icon { width: 22px; height: 22px; }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding: 80px 0 100px;
+      position: relative;
+      background-image:
+        linear-gradient(to right, rgba(250,250,247,0.48) 0%, rgba(250,250,247,0.44) 50%, rgba(250,250,247,0.39) 100%),
+        url('images/Gemini_Generated_Image_niofdrniofdrniof.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 500;
+      color: #2A2A2A;
+      padding: 6px 12px;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      background: var(--surface);
+      margin-bottom: 28px;
+    }
+    .eyebrow .icon { width: 14px; height: 14px; color: var(--accent); }
+    .hero h1 {
+      font-size: clamp(40px, 5.2vw, 68px);
+      margin-bottom: 24px;
+    }
+    .hero h1 .accent { color: var(--accent); }
+    .hero-sub {
+      font-size: 18px; line-height: 1.6;
+      color: #2A2A2A;
+      max-width: 540px;
+      margin-bottom: 40px;
+    }
+    .hero-meta {
+      display: flex; gap: 32px; flex-wrap: wrap;
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 1px solid var(--rule);
+    }
+    .hero-meta-item { display: flex; flex-direction: column; gap: 4px; }
+    .hero-meta-num {
+      font-size: 28px; font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .hero-meta-label { font-size: 13px; color: #2A2A2A; }
+    .hero-visual {
+      position: relative;
+      aspect-ratio: 4/5;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      background: var(--bg-2);
+    }
+    .photo {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .hero-visual .photo { border-radius: var(--r-lg); }
+    .hero-badge {
+      position: absolute; bottom: 24px; left: 24px;
+      background: var(--surface);
+      padding: 14px 18px;
+      border-radius: var(--r-md);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      display: flex; align-items: center; gap: 12px;
+      font-size: 14px;
+      border: 1px solid var(--rule);
+    }
+    .hero-badge .icon { width: 18px; height: 18px; color: var(--accent); }
+    .hero-badge strong { font-weight: 600; }
+
+    /* ===== Section common ===== */
+    section { padding: 100px 0; }
+    .section-head { margin-bottom: 56px; max-width: 720px; }
+    .section-tag {
+      display: inline-block;
+      font-size: 13px; font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 16px;
+      letter-spacing: 0.01em;
+    }
+    .section-tag::before { content: "— "; color: var(--accent); }
+    h2.section-title {
+      font-size: clamp(32px, 3.6vw, 48px);
+      margin-bottom: 20px;
+    }
+    .section-lead {
+      font-size: 18px; color: var(--ink-2);
+      line-height: 1.6;
+    }
+
+    /* ===== Кто мы ===== */
+    .about {
+      background: var(--bg-2);
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    .person-card {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: var(--r-lg);
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .person-photo {
+      aspect-ratio: 1;
+      border-radius: var(--r-md);
+      overflow: hidden;
+      background: var(--bg-2);
+    }
+    .person-photo .photo { border-radius: var(--r-md); }
+    .person-name {
+      font-size: 24px; font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+    .person-role {
+      font-size: 13px; color: var(--accent);
+      font-weight: 500; margin-bottom: 16px;
+    }
+    .person-bio {
+      font-size: 15px; line-height: 1.6;
+      color: var(--ink-2);
+      margin-bottom: 18px;
+    }
+    .person-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 12px; font-weight: 500;
+      padding: 4px 10px;
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      border-radius: var(--r-sm);
+      color: var(--ink-2);
+    }
+
+    /* ===== Что делаем ===== */
+    .services-list {
+      display: flex; flex-direction: column;
+      border-top: 1px solid var(--rule);
+    }
+    .service-row {
+      display: grid;
+      grid-template-columns: 56px 80px 1fr auto;
+      gap: 32px;
+      align-items: center;
+      padding: 28px 4px;
+      border-bottom: 1px solid var(--rule);
+      transition: background 0.2s, padding 0.2s, border-radius 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .service-row:hover {
+      background: var(--bg-2);
+      margin: 0 -16px;
+      padding-left: 20px; padding-right: 20px;
+      border-radius: var(--r-md);
+    }
+    .service-row:hover .service-title { color: var(--accent); }
+    .service-title { transition: color 0.2s; }
+    .service-icon {
+      width: 48px; height: 48px;
+      border-radius: var(--r-sm);
+      background: var(--bg-2);
+      border: 1px solid var(--rule);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ink);
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .service-row:hover .service-icon {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .service-icon .icon { width: 24px; height: 24px; }
+    .service-code {
+      font-size: 28px; font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .service-content { min-width: 0; }
+    .service-title {
+      font-size: 18px; font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .service-desc {
+      font-size: 14px; color: var(--ink-2);
+      line-height: 1.5;
+    }
+    .service-arrow {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--rule);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ink-2);
+      transition: all 0.15s;
+    }
+    .service-row:hover .service-arrow {
+      background: var(--ink); color: #fff; border-color: var(--ink);
+    }
+    .service-arrow .icon { width: 16px; height: 16px; }
+
+    /* ===== Как работаем ===== */
+    .process { background: var(--ink); color: var(--bg); }
+    .process .section-tag { color: var(--accent); }
+    .process h2.section-title { color: var(--bg); }
+    .process .section-lead { color: rgba(250,250,247,0.7); }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: 1px solid rgba(255,255,255,0.12);
+    }
+    .process-step {
+      padding: 40px 28px 36px 0;
+      border-right: 1px solid rgba(255,255,255,0.12);
+      position: relative;
+    }
+    .process-step:last-child { border-right: none; padding-right: 0; }
+    .process-step:not(:first-child) { padding-left: 28px; }
+    .step-num {
+      font-size: 13px; font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 28px;
+      letter-spacing: 0.05em;
+    }
+    .step-title {
+      font-size: 22px; font-weight: 700;
+      margin-bottom: 14px;
+      letter-spacing: -0.02em;
+    }
+    .step-desc {
+      font-size: 14px; line-height: 1.55;
+      color: rgba(250,250,247,0.65);
+    }
+    .step-meta {
+      margin-top: 24px;
+      font-size: 12px; color: rgba(250,250,247,0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ===== Финальная CTA ===== */
+    .final-cta { padding: 140px 0; text-align: center; }
+    .final-cta h2 {
+      font-size: clamp(44px, 6vw, 88px);
+      line-height: 1.0;
+      margin-bottom: 28px;
+      max-width: 900px; margin-left: auto; margin-right: auto;
+    }
+    .final-cta h2 .accent { color: var(--accent); }
+    .final-cta p {
+      font-size: 19px; color: var(--ink-2);
+      max-width: 560px; margin: 0 auto 48px;
+      line-height: 1.6;
+    }
+    .final-cta-note {
+      margin-top: 24px;
+      font-size: 13px; color: var(--ink-3);
+    }
+    .final-cta-note a { color: var(--ink); border-bottom: 1px solid var(--rule); }
+
+    /* ===== Footer ===== */
+    footer {
+      border-top: 1px solid var(--rule);
+      padding: 36px 0;
+      background: var(--bg);
+    }
+    .footer-inner {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 16px;
+      font-size: 14px; color: var(--ink-2);
+    }
+    .footer-links { display: flex; gap: 28px; flex-wrap: wrap; }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+      .hero-visual { max-width: 480px; margin: 0 auto; width: 100%; }
+      .about-grid { grid-template-columns: 1fr; }
+      .person-card { grid-template-columns: 100px 1fr; padding: 24px; gap: 20px; }
+      .process-grid { grid-template-columns: 1fr 1fr; }
+      .process-step { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.12); padding: 32px 0 !important; }
+      .process-step:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.12); padding-right: 24px !important; }
+      .process-step:nth-child(even) { padding-left: 24px !important; }
+      .process-step:nth-last-child(-n+2) { border-bottom: none; }
+      .service-row { grid-template-columns: 48px 64px 1fr auto; gap: 16px; }
+      .service-code { font-size: 22px; }
+      .nav-links { display: none; }
+      section { padding: 72px 0; }
+      .hero { padding: 48px 0 64px; }
+      .final-cta { padding: 96px 0; }
+      .section-head { margin-bottom: 40px; }
+      .hero-meta { gap: 24px; margin-top: 36px; padding-top: 24px; }
+      .hero-meta-num { font-size: 24px; }
+    }
+    @media (max-width: 640px) {
+      .container, .nav-inner { padding-left: 20px; padding-right: 20px; }
+      .nav-inner { padding-top: 14px; padding-bottom: 14px; }
+      .nav-cta { padding: 8px 14px; font-size: 13px; }
+      .hero { padding: 32px 0 56px; }
+      .hero h1 { font-size: clamp(32px, 9vw, 44px); }
+      .hero-sub { font-size: 16px; margin-bottom: 32px; }
+      .btn-blob { width: 100%; min-width: 0; font-size: 15px; }
+      .btn-blob--lg { font-size: 16px; }
+      .hero-meta { gap: 20px 28px; }
+      .hero-badge { left: 16px; bottom: 16px; padding: 10px 14px; font-size: 13px; }
+
+      .service-row { grid-template-columns: 40px 1fr auto; gap: 14px; padding: 22px 4px; }
+      .service-row:hover { margin: 0 -12px; padding-left: 16px; padding-right: 16px; }
+      .service-code { display: none; }
+      .service-icon { width: 40px; height: 40px; }
+      .service-icon .icon { width: 20px; height: 20px; }
+      .service-title { font-size: 16px; }
+      .service-desc { font-size: 13px; }
+      .service-arrow { width: 28px; height: 28px; }
+
+      .person-card { grid-template-columns: 1fr; padding: 24px; }
+      .person-photo { width: 96px; height: 96px; }
+      .person-name { font-size: 22px; }
+
+      .process-grid { grid-template-columns: 1fr; }
+      .process-step { padding: 28px 0 !important; border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.12) !important; padding-left: 0 !important; padding-right: 0 !important; }
+      .process-step:last-child { border-bottom: none !important; }
+      .step-num { margin-bottom: 16px; }
+
+      .final-cta { padding: 72px 0; }
+      .final-cta h2 { font-size: clamp(32px, 9vw, 44px); margin-bottom: 20px; }
+      .final-cta p { font-size: 16px; margin-bottom: 32px; }
+
+      h2.section-title { font-size: clamp(26px, 7vw, 34px); }
+      .section-lead { font-size: 16px; }
+
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .footer-links { gap: 16px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo"><span class="logo-dot"></span> Евгений + Ирина</a>
+    <div class="nav-links">
+      <a href="#about">Кто мы</a>
+      <a href="#services">Что делаем</a>
+      <a href="#process">Как работаем</a>
+    </div>
+    <a href="#contact" class="nav-cta">
+      <i data-lucide="send"></i>
+      Написать
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow">
+        <i data-lucide="sparkles"></i>
+        Пара инженеров-проектировщиков
+      </div>
+      <h1>
+        ИИ-ассистенты для разделов <span class="accent">АР · КЖ · ОВ · ВК · ЭОМ</span>
+      </h1>
+      <p class="hero-sub">
+        Проектируем и внедряем ассистентов под конкретные разделы проектной документации. Без шаблонных «обёрток над ChatGPT» — каждое решение собрано под нормы, шаблоны и BIM-процессы вашего института.
+      </p>
+      <a href="#contact" class="btn-blob">
+        <span class="btn-blob__text">
+          <i data-lucide="send" class="icon"></i>
+          Написать в Telegram
+          <i data-lucide="arrow-right" class="icon"></i>
+        </span>
+        <span class="btn-blob__blob"></span>
+        <span class="btn-blob__blob"></span>
+        <span class="btn-blob__blob"></span>
+        <span class="btn-blob__blob"></span>
+      </a>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <span class="hero-meta-num">15+</span>
+          <span class="hero-meta-label">лет в проектных институтах</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-num">5</span>
+          <span class="hero-meta-label">разделов под ключ</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-num">2</span>
+          <span class="hero-meta-label">инженера, никаких субподрядов</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <img src="images/10.jpg" alt="Евгений и Ирина за работой" class="photo" />
+      <div class="hero-badge">
+        <i data-lucide="map-pin"></i>
+        <div><strong>Москва</strong> · работаем удалённо</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- КТО МЫ -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-tag">Кто мы</span>
+      <h2 class="section-title">Двое инженеров, которые сами проектировали — и устали от рутины</h2>
+      <p class="section-lead">
+        Мы не консультанты со стороны. Каждый из нас прошёл путь от стажёра до ведущего специалиста и знает, где в работе ГИПа теряются часы и сорваны сроки.
+      </p>
+    </div>
+
+    <div class="about-grid">
+      <div class="person-card">
+        <div class="person-photo">
+          <img src="images/11.jpg" alt="Евгений" class="photo" />
+        </div>
+        <div>
+          <h3 class="person-name">Евгений</h3>
+          <div class="person-role">Конструктор, технический директор · 20 лет в профессии</div>
+          <p class="person-bio">
+            Вёл крупные общественные и промышленные объекты. Знает, как разделы стыкуются между собой и где обычно ломается коммуникация со смежниками.
+          </p>
+          <div class="person-tags">
+            <span class="tag">АР</span>
+            <span class="tag">КЖ</span>
+            <span class="tag">BIM-координация</span>
+            <span class="tag">ГИП</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <div class="person-photo">
+          <img src="images/12.jpg" alt="Ирина" class="photo" />
+        </div>
+        <div>
+          <h3 class="person-name">Ирина</h3>
+          <div class="person-role">Инженер-проектировщик · 17 лет в профессии</div>
+          <p class="person-bio">
+            Специализируется на инженерных разделах: ОВ, ВК, ЭОМ. Параллельно — практика в LLM-инжиниринге и автоматизации технических расчётов.
+          </p>
+          <div class="person-tags">
+            <span class="tag">ОВ</span>
+            <span class="tag">ВК</span>
+            <span class="tag">ЭОМ</span>
+            <span class="tag">LLM-pipelines</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ЧТО ДЕЛАЕМ -->
+<section id="services">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-tag">Что делаем</span>
+      <h2 class="section-title">ИИ-ассистенты под пять разделов проектной документации</h2>
+      <p class="section-lead">
+        Каждый ассистент знает СП, ГОСТы и внутренние шаблоны вашего института. Помогает проверять, оформлять и собирать тома — а не просто «отвечает на вопросы».
+      </p>
+    </div>
+
+    <div class="services-list">
+      <div class="service-row">
+        <div class="service-icon"><i data-lucide="building-2" class="icon"></i></div>
+        <div class="service-code">АР</div>
+        <div class="service-content">
+          <div class="service-title">Архитектурные решения</div>
+          <div class="service-desc">Проверка ТЗ, генерация ведомостей, оформление пояснительных записок и спецификаций.</div>
+        </div>
+        <div class="service-arrow"><i data-lucide="arrow-up-right" class="icon"></i></div>
+      </div>
+
+      <div class="service-row">
+        <div class="service-icon"><i data-lucide="hard-hat" class="icon"></i></div>
+        <div class="service-code">КЖ</div>
+        <div class="service-content">
+          <div class="service-title">Конструкции железобетонные</div>
+          <div class="service-desc">Подбор узлов и типовых решений, проверка спецификаций арматуры, расчётные пояснительные.</div>
+        </div>
+        <div class="service-arrow"><i data-lucide="arrow-up-right" class="icon"></i></div>
+      </div>
+
+      <div class="service-row">
+        <div class="service-icon"><i data-lucide="fan" class="icon"></i></div>
+        <div class="service-code">ОВ</div>
+        <div class="service-content">
+          <div class="service-title">Отопление и вентиляция</div>
+          <div class="service-desc">Подбор оборудования по техническим требованиям, ведомости систем, сборка тома по шаблону.</div>
+        </div>
+        <div class="service-arrow"><i data-lucide="arrow-up-right" class="icon"></i></div>
+      </div>
+
+      <div class="service-row">
+        <div class="service-icon"><i data-lucide="droplets" class="icon"></i></div>
+        <div class="service-code">ВК</div>
+        <div class="service-content">
+          <div class="service-title">Водоснабжение и канализация</div>
+          <div class="service-desc">Расчёты по СП, спецификации трубопроводов и арматуры, проверка стыков с разделами ОВ и ЭОМ.</div>
+        </div>
+        <div class="service-arrow"><i data-lucide="arrow-up-right" class="icon"></i></div>
+      </div>
+
+      <div class="service-row">
+        <div class="service-icon"><i data-lucide="zap" class="icon"></i></div>
+        <div class="service-code">ЭОМ</div>
+        <div class="service-content">
+          <div class="service-title">Электрооборудование</div>
+          <div class="service-desc">Подбор кабельной продукции, расчёт сечений, кабельные журналы и схемы питания.</div>
+        </div>
+        <div class="service-arrow"><i data-lucide="arrow-up-right" class="icon"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- КАК РАБОТАЕМ -->
+<section id="process" class="process">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-tag">Как работаем</span>
+      <h2 class="section-title">От первого разговора до работающего ассистента — 4 шага</h2>
+      <p class="section-lead">
+        Не «коробочное решение». Каждое внедрение начинается с того, что мы садимся с вашими ГИПами и разбираемся, где именно теряется время.
+      </p>
+    </div>
+
+    <div class="process-grid">
+      <div class="process-step">
+        <div class="step-num">01 / БРИФ</div>
+        <h3 class="step-title">Разбираем рутину</h3>
+        <p class="step-desc">
+          Одна-две встречи. Смотрим, какие задачи ваши инженеры повторяют ежедневно, и где автоматизация даст реальный эффект.
+        </p>
+        <div class="step-meta">3–5 дней</div>
+      </div>
+
+      <div class="process-step">
+        <div class="step-num">02 / БАЗА ЗНАНИЙ</div>
+        <h3 class="step-title">Собираем контекст</h3>
+        <p class="step-desc">
+          Подключаем СП, ГОСТы, корпоративные шаблоны и типовые решения. Формируем закрытую базу знаний — только под вас.
+        </p>
+        <div class="step-meta">1–2 недели</div>
+      </div>
+
+      <div class="process-step">
+        <div class="step-num">03 / ВНЕДРЕНИЕ</div>
+        <h3 class="step-title">Запускаем пилот</h3>
+        <p class="step-desc">
+          Передаём ассистента в работу 2–3 инженерам. Корректируем по обратной связи, дорабатываем под рабочие сценарии.
+        </p>
+        <div class="step-meta">2–3 недели</div>
+      </div>
+
+      <div class="process-step">
+        <div class="step-num">04 / ПОДДЕРЖКА</div>
+        <h3 class="step-title">Сопровождаем</h3>
+        <p class="step-desc">
+          Обновления при изменении норм, обучение новых сотрудников, расширение под смежные разделы. Без скрытых платежей.
+        </p>
+        <div class="step-meta">постоянно</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ФИНАЛЬНАЯ CTA -->
+<section id="contact" class="final-cta">
+  <div class="container">
+    <h2>Расскажите про <span class="accent">вашу компанию</span> — посмотрим, что можно автоматизировать</h2>
+    <p>Один разговор в Telegram, без презентаций и менеджеров. Ответим в течение рабочего дня.</p>
+    <a href="https://t.me/" class="btn-blob btn-blob--lg">
+      <span class="btn-blob__text">
+        <i data-lucide="send" class="icon"></i>
+        Написать в Telegram
+        <i data-lucide="arrow-right" class="icon"></i>
+      </span>
+      <span class="btn-blob__blob"></span>
+      <span class="btn-blob__blob"></span>
+      <span class="btn-blob__blob"></span>
+      <span class="btn-blob__blob"></span>
+    </a>
+    <div class="final-cta-note">
+      Или email — <a href="mailto:hello@example.com">hello@example.com</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <div>© 2026 · Евгений + Ирина</div>
+    <div class="footer-links">
+      <a href="mailto:hello@example.com">hello@example.com</a>
+      <a href="https://t.me/">t.me / @handle</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Инициализация иконок Lucide после загрузки DOM
+  if (window.lucide) lucide.createIcons();
+</script>
+
+</body>
+</html>

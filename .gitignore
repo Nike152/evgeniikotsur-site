@@ -1,0 +1,33 @@
+# Секреты
+.env
+.env.local
+.env.*.local
+
+# Зависимости (если потом подключишь сборщик)
+node_modules/
+build/
+.next/
+
+# собранная папка для деплоя на Netlify Drop, пересобирается
+dist/
+
+# Личные файлы-якоря проекта — не для публики
+памятки/
+
+# Сборочные ZIP-bundle из Claude Design — не нужны на сервере
+claude-design-итерации/
+
+# Бэкап старой git-истории (сделан при подготовке к публичному репо)
+.git-backup-before-public/
+
+# Логи
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
