@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сколько ваше бюро теряет на хаосе — Проект без хаоса</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#11151c; --ink-2:#171c25; --line:#2a3340;
+    --paper:#e8ebef; --muted:#8b97a7;
+    --amber:#e8a33d; --green:#54b08c; --green-soft:#1b2e29;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--ink);
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:32px 32px;background-position:center top;
+    color:var(--paper);font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:28px 18px 64px}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin:0 0 14px}
+  h1{font-size:clamp(28px,7vw,42px);line-height:1.08;font-weight:700;margin:0 0 12px;letter-spacing:-.01em}
+  .lede{color:var(--muted);font-size:16px;margin:0 0 8px;max-width:52ch}
+  .card{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);padding:22px 20px;margin:22px 0}
+  .card-head{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+  .card-num{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--amber);font-weight:600}
+  .card-title{font-size:19px;font-weight:600;margin:0}
+  .card-sub{color:var(--muted);font-size:14px;margin:2px 0 18px}
+  .field{margin:16px 0}
+  .field-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:8px}
+  .field label{font-size:14px;color:var(--paper)}
+  .val{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:15px;background:#0e1219;border:1px solid var(--line);border-radius:8px;padding:4px 8px;min-width:84px;text-align:right;color:var(--paper)}
+  .val:focus{outline:2px solid var(--amber);outline-offset:1px}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;background:var(--line);border-radius:99px;outline:none;margin:6px 0 0}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:var(--amber);cursor:pointer;border:3px solid var(--ink-2);box-shadow:0 0 0 1px var(--amber)}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--amber);cursor:pointer;border:3px solid var(--ink-2)}
+  input[type=range].green::-webkit-slider-thumb{background:var(--green);box-shadow:0 0 0 1px var(--green)}
+  input[type=range].green::-moz-range-thumb{background:var(--green)}
+
+  /* отделы */
+  .dept{border:1px solid var(--line);border-radius:10px;padding:12px 12px 6px;margin:10px 0;background:#0e1219}
+  .dept-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .dept-name{flex:1;font-family:"IBM Plex Sans",sans-serif;font-size:15px;font-weight:600;background:transparent;border:none;border-bottom:1px solid var(--line);color:var(--paper);padding:4px 2px}
+  .dept-name:focus{outline:none;border-bottom-color:var(--amber)}
+  .dept-del{background:transparent;border:1px solid var(--line);color:var(--muted);width:30px;height:30px;border-radius:8px;font-size:18px;line-height:1;cursor:pointer;flex:none}
+  .dept-del:hover{color:var(--amber);border-color:var(--amber)}
+  .dept-fields{display:flex;gap:10px;flex-wrap:wrap}
+  .mini{flex:1;min-width:130px}
+  .mini label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+  .mini input{width:100%;font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:15px;background:#11161f;border:1px solid var(--line);border-radius:8px;padding:7px 9px;color:var(--paper)}
+  .mini input:focus{outline:2px solid var(--amber);outline-offset:1px}
+  .add{margin-top:6px;background:transparent;border:1px dashed var(--line);color:var(--paper);width:100%;padding:11px;border-radius:10px;font-size:14px;cursor:pointer;font-family:"IBM Plex Sans",sans-serif}
+  .add:hover{border-color:var(--amber);color:var(--amber)}
+
+  .result{margin-top:18px;padding-top:18px;border-top:1px dashed var(--line);display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  .result-label{font-size:13px;color:var(--muted);font-family:"IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.08em}
+  .big{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:clamp(30px,9vw,48px);line-height:1;letter-spacing:-.01em}
+  .big.loss{color:var(--amber)} .big.gain{color:var(--green)}
+  .per{font-size:14px;color:var(--muted);font-family:"IBM Plex Sans",sans-serif}
+  .sub-result{font-size:13px;color:var(--muted);font-family:"IBM Plex Mono",monospace;width:100%}
+  .note{font-size:13px;color:var(--muted);margin-top:14px;padding:10px 12px;border-left:2px solid var(--line);background:#0e1219;border-radius:0 8px 8px 0}
+  .note b{color:var(--paper);font-weight:600}
+
+  .cta{background:linear-gradient(180deg,var(--green-soft),#13201d);border:1px solid var(--green);border-radius:var(--radius);padding:26px 22px;margin:26px 0 14px;text-align:center}
+  .cta .big{margin:4px 0 2px}
+  .cta h2{font-size:21px;margin:14px 0 6px;font-weight:700}
+  .cta p{color:var(--muted);font-size:14px;margin:0 auto 18px;max-width:46ch}
+  .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-block;background:var(--green);color:#0c1714;font-weight:700;font-size:16px;text-decoration:none;padding:13px 24px;border-radius:10px;border:none;cursor:pointer;font-family:"IBM Plex Sans",sans-serif}
+  .btn:focus{outline:2px solid var(--paper);outline-offset:2px}
+  .btn.ghost{background:transparent;border:1px solid var(--green);color:var(--green)}
+  .foot{color:var(--muted);font-size:12px;line-height:1.6;margin-top:26px}
+  .foot b{color:#aab4c2}
+  .brand{font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.04em;color:var(--paper);margin-top:30px;border-top:1px solid var(--line);padding-top:16px}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#0e1219;border:1px solid var(--green);color:var(--paper);padding:12px 18px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:10}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Проект без хаоса · калькулятор потерь</p>
+  <h1>Сколько ваше бюро теряет на хаосе</h1>
+  <p class="lede">Две тихие протечки, которые не видно в отчёте, пока не посчитаешь. Подставьте свои числа — суммы пересчитаются сразу.</p>
+
+  <div class="card">
+    <div class="field">
+      <div class="field-top">
+        <label for="rate">Ставка инженера, ₽ за час</label>
+        <input class="val" id="rate" type="number" min="500" max="10000" step="100" value="3000" inputmode="numeric">
+      </div>
+      <input type="range" id="rate-r" min="500" max="10000" step="100" value="3000" aria-label="Ставка инженера в час">
+    </div>
+  </div>
+
+  <!-- 01 SCOPE CREEP -->
+  <div class="card">
+    <div class="card-head"><span class="card-num">01</span><h2 class="card-title">Scope creep</h2></div>
+    <p class="card-sub">«Мелкие» правки заказчика, которые вы делаете бесплатно</p>
+    <div class="field">
+      <div class="field-top">
+        <label for="sc-h">Часов на одну «бесплатную» правку</label>
+        <input class="val" id="sc-h" type="number" min="1" max="80" step="1" value="8" inputmode="numeric">
+      </div>
+      <input type="range" id="sc-h-r" min="1" max="80" step="1" value="8" aria-label="Часов на одну правку">
+    </div>
+    <div class="field">
+      <div class="field-top">
+        <label for="sc-n">Таких правок в месяц</label>
+        <input class="val" id="sc-n" type="number" min="0" max="100" step="1" value="8" inputmode="numeric">
+      </div>
+      <input type="range" id="sc-n-r" min="0" max="100" step="1" value="8" aria-label="Правок в месяц">
+    </div>
+    <div class="result">
+      <span class="result-label">Дарите заказчику</span>
+      <div><span class="big loss" id="sc-year">0&nbsp;₽</span> <span class="per">/ год</span></div>
+      <span class="sub-result" id="sc-month">0 ₽ в месяц</span>
+    </div>
+    <p class="note">Это лечится не ассистентом, а <b>реестром изменений</b>: фиксируйте каждую правку как допработу — и она становится оплачиваемой, а не подарком.</p>
+  </div>
+
+  <!-- 02 НОРМОКОНТРОЛЬ ПО ОТДЕЛАМ -->
+  <div class="card">
+    <div class="card-head"><span class="card-num">02</span><h2 class="card-title">Ручной нормоконтроль по отделам</h2></div>
+    <p class="card-sub">Время на сверку с нормами вручную — по каждому отделу отдельно. 1 ассистент = 1 отдел.</p>
+
+    <div id="depts"></div>
+    <button class="add" id="add-dept" type="button">+ Добавить отдел</button>
+
+    <div class="field" style="margin-top:18px">
+      <div class="field-top">
+        <label for="nc-share">Долю первичной сверки забирает ассистент</label>
+        <input class="val" id="nc-share" type="number" min="40" max="80" step="5" value="60" inputmode="numeric">
+      </div>
+      <input type="range" class="green" id="nc-share-r" min="40" max="80" step="5" value="60" aria-label="Доля проверки, которую забирает ассистент">
+    </div>
+
+    <div class="result">
+      <span class="result-label">Стоит ручной нормоконтроль (все отделы)</span>
+      <div><span class="big loss" id="nc-year">0&nbsp;₽</span> <span class="per">/ год</span></div>
+      <span class="sub-result" id="nc-month">0 ₽ в месяц</span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <p class="result-label">Столько вернут ассистенты на нормоконтроле</p>
+    <div class="big gain" id="gain-year">0&nbsp;₽</div>
+    <span class="per">в год · оценка по вашим цифрам</span>
+    <h2>Хотите проверить на своём документе?</h2>
+    <p>Соберу ассистента под ваш отдел и при вас прогоню реальный раздел за 15 минут. Без обязательств.</p>
+    <div class="btns">
+      <!-- ЗАМЕНИТЕ ссылку на свой контакт в Telegram -->
+      <a class="btn" id="cta-link" href="https://t.me/NoChaosProject" target="_blank" rel="noopener">Написать в «Проект без хаоса»</a>
+      <button class="btn ghost" id="share" type="button">Поделиться расчётом</button>
+    </div>
+  </div>
+
+  <p class="foot">
+    <b>Честно про цифры.</b> Это оценка по вашим вводным, а не оферта и не гарантия. Ставка и часы — ваши, ниша расчёта может отличаться.<br>
+    <b>Про ассистента.</b> Он берёт на себя первичную сверку и даёт второй взгляд — финальную проверку, решения, подписи и ответственность всегда несёт инженер. Работает в браузерном Claude, для несекретных объектов.
+  </p>
+
+  <p class="brand">проект&nbsp;без&nbsp;хаоса · ассистенты под отдел · 20 лет в проектировании</p>
+</div>
+
+<div class="toast" id="toast">Скопировано — вставьте в чат коллеге</div>
+
+<script>
+(function(){
+  var fmt = new Intl.NumberFormat('ru-RU');
+  function rub(n){ return fmt.format(Math.round(n)) + '\u00A0₽'; }
+  function v(id){ return parseFloat(document.getElementById(id).value) || 0; }
+
+  // связь number-поле + ползунок
+  function link(numId, rngId){
+    var num=document.getElementById(numId), rng=document.getElementById(rngId);
+    function clamp(x){var mn=parseFloat(rng.min),mx=parseFloat(rng.max);if(isNaN(x))x=mn;return Math.min(mx,Math.max(mn,x));}
+    num.addEventListener('input',function(){rng.value=clamp(parseFloat(num.value));calc();});
+    num.addEventListener('blur',function(){num.value=clamp(parseFloat(num.value));calc();});
+    rng.addEventListener('input',function(){num.value=rng.value;calc();});
+  }
+
+  // ----- отделы -----
+  var presets=['КР','ПБ','ОВ','ВК','ЭОМ','АР','ТХ','ГП'];
+  var defaults=[['КР',16,4],['ПБ',8,4]];
+  var box=document.getElementById('depts');
+
+  function addDept(name,h,n){
+    var row=document.createElement('div'); row.className='dept';
+    row.innerHTML=
+      '<div class="dept-top">'+
+        '<input class="dept-name" type="text" value="'+(name||'')+'" placeholder="Отдел" aria-label="Название отдела">'+
+        '<button class="dept-del" type="button" aria-label="Удалить отдел">×</button>'+
+      '</div>'+
+      '<div class="dept-fields">'+
+        '<div class="mini"><label>Часов на раздел</label><input class="dept-h" type="number" min="1" max="120" step="1" value="'+(h||16)+'" inputmode="numeric"></div>'+
+        '<div class="mini"><label>Разделов в месяц</label><input class="dept-n" type="number" min="0" max="200" step="1" value="'+(n||4)+'" inputmode="numeric"></div>'+
+      '</div>';
+    box.appendChild(row);
+    row.querySelector('.dept-del').addEventListener('click',function(){
+      if(box.querySelectorAll('.dept').length>1){ row.remove(); calc(); }
+    });
+    row.querySelector('.dept-h').addEventListener('input',calc);
+    row.querySelector('.dept-n').addEventListener('input',calc);
+  }
+
+  document.getElementById('add-dept').addEventListener('click',function(){
+    var used=box.querySelectorAll('.dept').length;
+    addDept(presets[used % presets.length],16,4); calc();
+  });
+
+  // ----- расчёт -----
+  var last={};
+  function calc(){
+    var rate=v('rate');
+
+    var scMonth=rate*v('sc-h')*v('sc-n');
+    document.getElementById('sc-year').textContent=rub(scMonth*12);
+    document.getElementById('sc-month').textContent=rub(scMonth)+' в месяц';
+
+    var ncMonth=0;
+    box.querySelectorAll('.dept').forEach(function(r){
+      var h=parseFloat(r.querySelector('.dept-h').value)||0;
+      var n=parseFloat(r.querySelector('.dept-n').value)||0;
+      ncMonth+=rate*h*n;
+    });
+    document.getElementById('nc-year').textContent=rub(ncMonth*12);
+    document.getElementById('nc-month').textContent=rub(ncMonth)+' в месяц';
+
+    var share=v('nc-share')/100;
+    var gainYear=ncMonth*12*share;
+    document.getElementById('gain-year').textContent=rub(gainYear);
+
+    last={sc:scMonth*12, nc:ncMonth*12, gain:gainYear};
+  }
+
+  // ----- поделиться -----
+  var toast=document.getElementById('toast');
+  function showToast(msg){toast.textContent=msg;toast.classList.add('show');setTimeout(function(){toast.classList.remove('show');},2200);}
+  document.getElementById('share').addEventListener('click',function(){
+    var text='Посчитал на калькуляторе «Проект без хаоса»:\n'+
+      '— scope creep: '+rub(last.sc)+'/год дарим заказчику\n'+
+      '— ручной нормоконтроль: '+rub(last.nc)+'/год\n'+
+      '— ассистенты вернули бы ~'+rub(last.gain)+'/год\n'+
+      'Посчитай своё бюро: '+location.href;
+    if(navigator.share){
+      navigator.share({title:'Калькулятор потерь — Проект без хаоса',text:text}).catch(function(){});
+    }else if(navigator.clipboard){
+      navigator.clipboard.writeText(text).then(function(){showToast('Скопировано — вставьте в чат коллеге');},
+        function(){showToast('Не удалось скопировать');});
+    }else{ showToast('Скопируйте текст вручную'); }
+  });
+
+  // init
+  link('rate','rate-r'); link('sc-h','sc-h-r'); link('sc-n','sc-n-r'); link('nc-share','nc-share-r');
+  defaults.forEach(function(d){addDept(d[0],d[1],d[2]);});
+  calc();
+})();
+</script>
+</body>
+</html>
