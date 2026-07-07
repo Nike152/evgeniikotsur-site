@@ -1,839 +1,636 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Евгений + Ирина · ИИ-ассистенты для проектной документации</title>
-
-  <!-- Шрифт Inter (Google Fonts), кириллица -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap&subset=cyrillic,cyrillic-ext,latin" rel="stylesheet">
-
-  <!-- Tailwind CSS v4 (browser-режим, без сборки) -->
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
-  <!-- Иконки Lucide (UMD) -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Проект без хаоса — AI-ассистенты для проектирования ПГС</title>
+  <meta name="description" content="12 AI-ассистентов по разделам ПГС. Демо 30 минут → договор → установка на ваш ПК. Данные остаются в контуре заказчика, вы владеете активом. Экономия бюро на 50 инженеров ≈ 27,7 млн ₽/год." />
+  <meta name="theme-color" content="#0A0B14" />
+  <meta property="og:title" content="Проект без хаоса — AI-ассистенты для проектирования ПГС" />
+  <meta property="og:description" content="Демо 30 минут → договор → установка. Экономия бюро на 50 инженеров ≈ 27,7 млн ₽/год. Оплата 50/50." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230A0B14'/%3E%3Crect x='9' y='7' width='4' height='18' rx='2' fill='%237C5CFF'/%3E%3Crect x='15' y='12' width='4' height='13' rx='2' fill='%2322D3EE'/%3E%3Crect x='21' y='9' width='4' height='16' rx='2' fill='%237C5CFF'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
   <style>
+    /* ============ Токены ============ */
     :root {
-      --bg: #FAFAF7;
-      --bg-2: #F2EFE8;
-      --surface: #FFFFFF;
-      --ink: #1A1A1A;
-      --ink-2: #5A5A5A;
-      --ink-3: #9A968B;
-      --rule: #E5E1D6;
-      --accent: #E25822;
-      --accent-2: #ff930f;
-      --accent-3: #C8451A;
-      --accent-4: #f4b942;
-      --r-sm: 8px;
-      --r-md: 10px;
-      --r-lg: 12px;
+      --bg: #0A0B14; --panel: #151833; --panel-2: #1B1F40; --panel-hl: #241C46;
+      --purple: #7C5CFF; --cyan: #22D3EE;
+      --text: #FFFFFF; --body: #C9CCDE; --muted: #8A8FB0;
+      --border: rgba(255,255,255,0.08); --border-strong: rgba(255,255,255,0.14);
+      --radius: 18px; --radius-sm: 12px; --maxw: 1120px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, monospace;
     }
-    * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      font-weight: 400;
-      background: var(--bg);
-      color: var(--ink);
-      -webkit-font-smoothing: antialiased;
-      line-height: 1.55;
-    }
-    h1, h2, h3, h4 {
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.05;
-      margin: 0;
-    }
-    p { margin: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body { font-family: var(--font); background-color: var(--bg);
+      background-image: radial-gradient(rgba(124,92,255,.06) 1px, transparent 1px), radial-gradient(rgba(34,211,238,.045) 1px, transparent 1px);
+      background-size: 26px 26px, 26px 26px; background-position: 0 0, 13px 13px; background-attachment: fixed;
+      color: var(--body); line-height: 1.6; font-size: 17px; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
     a { color: inherit; text-decoration: none; }
-    button { font-family: inherit; cursor: pointer; }
+    h1,h2,h3 { color: var(--text); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; }
+    h2 { font-size: clamp(28px, 4.2vw, 42px); }
+    h3 { font-size: 20px; font-weight: 600; }
+    .muted { color: var(--muted); }
+    strong { color: var(--text); font-weight: 600; }
+    .container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    section { padding: 82px 0; position: relative; }
+    @media (max-width: 640px) { section { padding: 54px 0; } }
+    .eyebrow { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cyan); margin-bottom: 16px; display: inline-block; }
+    .section-lead { max-width: 680px; margin-top: 18px; font-size: 18px; color: var(--muted); }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 32px;
-    }
+    /* ============ Кнопки ============ */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-weight: 600; font-size: 16px; padding: 14px 26px; border-radius: 12px; cursor: pointer; transition: transform .18s ease, box-shadow .18s ease, background .18s ease; border: 1px solid transparent; text-align: center; }
+    .btn-primary { background: linear-gradient(135deg, var(--purple), #6a4bf0); color: #fff; box-shadow: 0 8px 30px rgba(124,92,255,.35); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(124,92,255,.5); }
+    .btn-ghost { background: rgba(255,255,255,.04); color: var(--text); border: 1px solid var(--border-strong); }
+    .btn-ghost:hover { background: rgba(255,255,255,.08); transform: translateY(-2px); }
+    .btn-lg { padding: 16px 32px; font-size: 17px; }
+    .btn-block { width: 100%; }
 
-    /* ===== Nav ===== */
-    .nav {
-      position: sticky; top: 0; z-index: 50;
-      background: rgba(250, 250, 247, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--rule);
-    }
-    .nav-inner {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 32px;
-      max-width: 1200px; margin: 0 auto;
-    }
-    .logo {
-      font-weight: 700; font-size: 16px; letter-spacing: -0.01em;
-      display: flex; align-items: center; gap: 10px;
-    }
-    .logo-dot {
-      width: 10px; height: 10px; border-radius: 2px;
-      background: var(--accent);
-      display: inline-block;
-    }
-    .nav-links {
-      display: flex; gap: 36px;
-      font-size: 14px; color: var(--ink-2);
-      font-weight: 500;
-    }
-    .nav-links a:hover { color: var(--ink); }
-    .nav-cta {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 10px 18px;
-      background: var(--ink); color: var(--bg);
-      border-radius: var(--r-sm);
-      font-size: 14px; font-weight: 500;
-      border: none;
-      transition: background 0.15s;
-    }
-    .nav-cta:hover { background: #000; }
+    /* ============ Шапка ============ */
+    header { position: sticky; top: 0; z-index: 50; background: rgba(10,11,20,.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid transparent; transition: border-color .3s ease; }
+    header.scrolled { border-bottom: 1px solid var(--border); }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--text); font-size: 18px; }
+    .logo .mark { width: 26px; height: 26px; border-radius: 7px; flex-shrink: 0; background: linear-gradient(135deg, var(--purple), var(--cyan)); position: relative; }
+    .logo .mark::after { content: ''; position: absolute; inset: 6px 7px; background: repeating-linear-gradient(90deg, rgba(255,255,255,.9) 0 2px, transparent 2px 5px); border-radius: 2px; }
+    header .btn { padding: 10px 20px; font-size: 15px; }
+    @media (max-width: 560px) { .logo span.full { display: none; } header .btn { padding: 9px 15px; font-size: 13px; } }
 
-    /* ===== CTA-кнопка в стиле adamgiebl (uiverse), цвета адаптированы под акцент ===== */
-    .btn-blob {
-      position: relative;
-      display: inline-block;
-      font-family: inherit;
-      font-size: 16px;
-      font-weight: 600;
-      border-radius: 999px;
-      padding: 0;
-      width: auto;
-      min-width: 16em;
-      height: 3.4em;
-      z-index: 1;
-      color: #fff;
-      cursor: pointer;
-      overflow: hidden;
-      border: none;
-      background: transparent;
-      letter-spacing: -0.005em;
-      text-align: center;
-    }
-    .btn-blob__text {
-      position: absolute;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      border-radius: 999px;
-      background: linear-gradient(rgba(255, 255, 255, 0.40), rgba(150, 150, 150, 0.18));
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      z-index: 1;
-    }
-    .btn-blob__text .icon { width: 18px; height: 18px; }
-    .btn-blob__blob {
-      position: absolute;
-      z-index: 0;
-      border-radius: 50%;
-      width: 5em;
-      height: 3em;
-      transition: transform 0.35s ease-in-out, background 0.35s ease-in-out;
-      pointer-events: none;
-    }
-    .btn-blob__blob:nth-child(2) { left: -0.5em; top: 0;     background: var(--accent-2); }
-    .btn-blob__blob:nth-child(3) { left: 25%;    top: 0;     background: var(--accent);   }
-    .btn-blob__blob:nth-child(4) { left: 55%;    top: -1em;  background: var(--accent-3); }
-    .btn-blob__blob:nth-child(5) { left: 75%;    top: 1.6em; background: var(--accent-4); }
-    .btn-blob:hover .btn-blob__blob:nth-child(2) { background: var(--accent-3); }
-    .btn-blob:hover .btn-blob__blob:nth-child(3) { background: var(--accent-4); }
-    .btn-blob:hover .btn-blob__blob:nth-child(4) { background: var(--accent-2); }
-    .btn-blob:hover .btn-blob__blob:nth-child(5) { background: var(--accent);   }
-    .btn-blob:hover .btn-blob__blob { transform: scale(1.3); }
-    .btn-blob:active { box-shadow: inset 0 0 0 2px rgba(255,255,255,0.65); }
-    .btn-blob--lg {
-      font-size: 18px;
-      height: 3.8em;
-      min-width: 18em;
-    }
-    .btn-blob--lg .btn-blob__text .icon { width: 22px; height: 22px; }
+    /* ============ Hero ============ */
+    .hero { padding-top: 92px; padding-bottom: 88px; text-align: center; overflow: hidden; }
+    .hero-glow { position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(600px 420px at 30% 15%, rgba(124,92,255,.28), transparent 60%), radial-gradient(560px 400px at 78% 30%, rgba(34,211,238,.18), transparent 60%), radial-gradient(700px 500px at 50% 100%, rgba(124,92,255,.10), transparent 65%); }
+    .hero .container { position: relative; z-index: 1; }
+    .hero h1 { font-size: clamp(32px, 5.6vw, 56px); font-weight: 800; max-width: 920px; margin: 0 auto; }
+    .hero h1 .accent { color: var(--purple); display: block; }
+    .hero .sub { font-size: clamp(17px, 2.3vw, 21px); color: var(--body); max-width: 660px; margin: 22px auto 0; }
+    .hero .cta-row { margin-top: 36px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; align-items: center; }
+    .hero .cta-row .link { color: var(--muted); font-size: 15px; } .hero .cta-row .link:hover { color: var(--cyan); }
+    .hero .trust { margin-top: 26px; font-family: var(--mono); font-size: 13px; color: var(--muted); letter-spacing: .04em; }
+    .hero { position: relative; }
 
-    /* ===== HERO ===== */
-    .hero {
-      padding: 80px 0 100px;
-      position: relative;
-      background-image:
-        linear-gradient(to right, rgba(250,250,247,0.48) 0%, rgba(250,250,247,0.44) 50%, rgba(250,250,247,0.39) 100%),
-        url('images/Gemini_Generated_Image_niofdrniofdrniof.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 1fr;
-      gap: 64px;
-      align-items: center;
-    }
-    .eyebrow {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: 13px; font-weight: 500;
-      color: #2A2A2A;
-      padding: 6px 12px;
-      border: 1px solid var(--rule);
-      border-radius: 999px;
-      background: var(--surface);
-      margin-bottom: 28px;
-    }
-    .eyebrow .icon { width: 14px; height: 14px; color: var(--accent); }
-    .hero h1 {
-      font-size: clamp(40px, 5.2vw, 68px);
-      margin-bottom: 24px;
-    }
-    .hero h1 .accent { color: var(--accent); }
-    .hero-sub {
-      font-size: 18px; line-height: 1.6;
-      color: #2A2A2A;
-      max-width: 540px;
-      margin-bottom: 40px;
-    }
-    .hero-meta {
-      display: flex; gap: 32px; flex-wrap: wrap;
-      margin-top: 48px;
-      padding-top: 32px;
-      border-top: 1px solid var(--rule);
-    }
-    .hero-meta-item { display: flex; flex-direction: column; gap: 4px; }
-    .hero-meta-num {
-      font-size: 28px; font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-    .hero-meta-label { font-size: 13px; color: #2A2A2A; }
-    .hero-visual {
-      position: relative;
-      aspect-ratio: 4/5;
-      border-radius: var(--r-lg);
-      overflow: hidden;
-      background: var(--bg-2);
-    }
-    .photo {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .hero-visual .photo { border-radius: var(--r-lg); }
-    .hero-badge {
-      position: absolute; bottom: 24px; left: 24px;
-      background: var(--surface);
-      padding: 14px 18px;
-      border-radius: var(--r-md);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-      display: flex; align-items: center; gap: 12px;
-      font-size: 14px;
-      border: 1px solid var(--rule);
-    }
-    .hero-badge .icon { width: 18px; height: 18px; color: var(--accent); }
-    .hero-badge strong { font-weight: 600; }
+    /* ===== AI-chip (кнопка-эмблема) ===== */
+    .ai-chip { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 16px; margin-bottom: 22px; overflow: visible; cursor: pointer; background: linear-gradient(135deg, #7C5CFF, #22D3EE); box-shadow: 0 1px 2px rgba(0,0,0,.35), 0 4px 14px rgba(124,92,255,.4), 0 24px 44px -24px rgba(34,211,238,.6), inset 0 -2px 6px rgba(0,0,0,.28); transition: transform .2s ease; z-index: 2; }
+    .ai-chip:active { transform: scale(.95); }
+    .ai-chip .spark { position: absolute; z-index: 2; top: 9px; left: 9px; width: 18px; height: 18px; color: rgba(255,255,255,.9); transition: all .3s ease; animation: sparkPulse 2.2s ease-in-out infinite; }
+    .ai-chip:hover .spark { width: 34px; height: 34px; top: 13px; left: 13px; color: #fff; }
+    .ai-chip .ai-text { font-size: 26px; font-weight: 800; color: #fff; line-height: 1; transition: opacity .2s ease; }
+    .ai-chip:hover .ai-text { opacity: 0; }
+    @keyframes sparkPulse { 0%,100%{opacity:.65;} 50%{opacity:1;} }
 
-    /* ===== Section common ===== */
-    section { padding: 100px 0; }
-    .section-head { margin-bottom: 56px; max-width: 720px; }
-    .section-tag {
-      display: inline-block;
-      font-size: 13px; font-weight: 500;
-      color: var(--accent);
-      margin-bottom: 16px;
-      letter-spacing: 0.01em;
-    }
-    .section-tag::before { content: "— "; color: var(--accent); }
-    h2.section-title {
-      font-size: clamp(32px, 3.6vw, 48px);
-      margin-bottom: 20px;
-    }
-    .section-lead {
-      font-size: 18px; color: var(--ink-2);
-      line-height: 1.6;
-    }
+    /* ===== Орб в Hero ===== */
+    .orb-hero { position: absolute; z-index: 0; top: -30px; right: 5%; width: 320px; height: 320px; border-radius: 50%; pointer-events: none; opacity: .6; background: radial-gradient(circle at 40% 34%, rgba(255,255,255,.7), rgba(124,92,255,.5) 22%, rgba(124,92,255,0) 60%), radial-gradient(circle at 66% 70%, rgba(34,211,238,.45), rgba(34,211,238,0) 55%), radial-gradient(circle at 50% 50%, #2a2170, #130f30 72%); box-shadow: 0 0 90px 20px rgba(124,92,255,.4), 0 0 170px 50px rgba(34,211,238,.14); animation: orbBreathe 4s ease-in-out infinite; }
+    .orb-hero::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, transparent, rgba(124,92,255,.35), transparent 40%, rgba(34,211,238,.3), transparent 72%); mix-blend-mode: screen; animation: orbSpin 7s linear infinite; }
+    @keyframes orbBreathe { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+    @keyframes orbSpin { to { transform: rotate(360deg); } }
+    @media (max-width: 820px) { .orb-hero { width: 200px; height: 200px; right: -20px; top: -10px; opacity: .4; } }
 
-    /* ===== Кто мы ===== */
-    .about {
-      background: var(--bg-2);
-      border-top: 1px solid var(--rule);
-      border-bottom: 1px solid var(--rule);
-    }
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-    }
-    .person-card {
-      background: var(--surface);
-      border: 1px solid var(--rule);
-      border-radius: var(--r-lg);
-      padding: 32px;
-      display: grid;
-      grid-template-columns: 140px 1fr;
-      gap: 28px;
-      align-items: start;
-    }
-    .person-photo {
-      aspect-ratio: 1;
-      border-radius: var(--r-md);
-      overflow: hidden;
-      background: var(--bg-2);
-    }
-    .person-photo .photo { border-radius: var(--r-md); }
-    .person-name {
-      font-size: 24px; font-weight: 700;
-      margin-bottom: 6px;
-      letter-spacing: -0.02em;
-    }
-    .person-role {
-      font-size: 13px; color: var(--accent);
-      font-weight: 500; margin-bottom: 16px;
-    }
-    .person-bio {
-      font-size: 15px; line-height: 1.6;
-      color: var(--ink-2);
-      margin-bottom: 18px;
-    }
-    .person-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .tag {
-      font-size: 12px; font-weight: 500;
-      padding: 4px 10px;
-      background: var(--bg-2);
-      border: 1px solid var(--rule);
-      border-radius: var(--r-sm);
-      color: var(--ink-2);
-    }
+    /* ===== Кнопка btn-reveal ===== */
+    .btn-reveal { position: relative; display: inline-flex; align-items: center; justify-content: center; padding: 16px 32px; border: 2px solid rgba(34,211,238,.75); border-radius: 10px; background: transparent; color: #fff; font-weight: 700; font-size: 16px; cursor: pointer; transition: box-shadow .5s ease, border-color .3s ease; }
+    .btn-reveal span { position: relative; z-index: 2; }
+    .btn-reveal::before, .btn-reveal::after { content: ''; position: absolute; left: 5%; width: 90%; height: 40%; background: var(--bg); z-index: 1; transition: transform .5s ease; transform-origin: center; }
+    .btn-reveal::before { top: -8px; }
+    .btn-reveal::after { top: 78%; }
+    .btn-reveal:hover::before, .btn-reveal:hover::after { transform: scaleX(0); }
+    .btn-reveal:hover { box-shadow: inset 0 0 24px rgba(34,211,238,.5), 0 0 20px rgba(34,211,238,.22); border-color: var(--cyan); }
+    @media (prefers-reduced-motion: reduce) { .orb-hero, .orb-hero::before, .ai-chip .spark { animation: none !important; } }
 
-    /* ===== Что делаем ===== */
-    .services-list {
-      display: flex; flex-direction: column;
-      border-top: 1px solid var(--rule);
-    }
-    .service-row {
-      display: grid;
-      grid-template-columns: 56px 80px 1fr auto;
-      gap: 32px;
-      align-items: center;
-      padding: 28px 4px;
-      border-bottom: 1px solid var(--rule);
-      transition: background 0.2s, padding 0.2s, border-radius 0.2s, transform 0.2s;
-      cursor: pointer;
-    }
-    .service-row:hover {
-      background: var(--bg-2);
-      margin: 0 -16px;
-      padding-left: 20px; padding-right: 20px;
-      border-radius: var(--r-md);
-    }
-    .service-row:hover .service-title { color: var(--accent); }
-    .service-title { transition: color 0.2s; }
-    .service-icon {
-      width: 48px; height: 48px;
-      border-radius: var(--r-sm);
-      background: var(--bg-2);
-      border: 1px solid var(--rule);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--ink);
-      transition: background 0.2s, border-color 0.2s, color 0.2s;
-    }
-    .service-row:hover .service-icon {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-    .service-icon .icon { width: 24px; height: 24px; }
-    .service-code {
-      font-size: 28px; font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-    .service-content { min-width: 0; }
-    .service-title {
-      font-size: 18px; font-weight: 600;
-      margin-bottom: 4px;
-    }
-    .service-desc {
-      font-size: 14px; color: var(--ink-2);
-      line-height: 1.5;
-    }
-    .service-arrow {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      border: 1px solid var(--rule);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--ink-2);
-      transition: all 0.15s;
-    }
-    .service-row:hover .service-arrow {
-      background: var(--ink); color: #fff; border-color: var(--ink);
-    }
-    .service-arrow .icon { width: 16px; height: 16px; }
+    .grid { display: grid; gap: 20px; }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
+    .checks { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .checks li { position: relative; padding-left: 26px; font-size: 15px; color: var(--body); }
+    .checks li::before { content: ''; position: absolute; left: 0; top: 7px; width: 15px; height: 15px; border-radius: 50%; background: rgba(34,211,238,.15); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322D3EE' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"); background-size: 11px; background-position: center; background-repeat: no-repeat; }
+    .num-badge { width: 40px; height: 40px; border-radius: 11px; background: linear-gradient(135deg, var(--purple), #6a4bf0); color: #fff; font-weight: 700; font-size: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-    /* ===== Как работаем ===== */
-    .process { background: var(--ink); color: var(--bg); }
-    .process .section-tag { color: var(--accent); }
-    .process h2.section-title { color: var(--bg); }
-    .process .section-lead { color: rgba(250,250,247,0.7); }
+    /* ============ Как это работает ============ */
+    .howto-grid { grid-template-columns: repeat(3, 1fr); margin-top: 40px; }
+    .howto { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; display: flex; flex-direction: column; }
+    .howto .top { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+    .howto h3 { font-size: 18px; }
+    .howto .dur { font-family: var(--mono); font-size: 12px; color: var(--cyan); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 14px; }
+    .howto p { font-size: 15px; color: var(--body); margin-bottom: 14px; }
+    .howto .sub-h { font-size: 13px; color: var(--muted); font-family: var(--mono); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 10px; }
+    .howto .foot { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--border); font-size: 14px; color: var(--muted); }
+    .howto .foot b { color: var(--cyan); }
 
-    .process-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      border-top: 1px solid rgba(255,255,255,0.12);
-    }
-    .process-step {
-      padding: 40px 28px 36px 0;
-      border-right: 1px solid rgba(255,255,255,0.12);
-      position: relative;
-    }
-    .process-step:last-child { border-right: none; padding-right: 0; }
-    .process-step:not(:first-child) { padding-left: 28px; }
-    .step-num {
-      font-size: 13px; font-weight: 500;
-      color: var(--accent);
-      margin-bottom: 28px;
-      letter-spacing: 0.05em;
-    }
-    .step-title {
-      font-size: 22px; font-weight: 700;
-      margin-bottom: 14px;
-      letter-spacing: -0.02em;
-    }
-    .step-desc {
-      font-size: 14px; line-height: 1.55;
-      color: rgba(250,250,247,0.65);
-    }
-    .step-meta {
-      margin-top: 24px;
-      font-size: 12px; color: rgba(250,250,247,0.45);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
+    /* ============ Отраслевой контекст ============ */
+    .context-grid { grid-template-columns: repeat(3, 1fr); margin-top: 40px; }
+    .context { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
+    .context .n { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--purple); margin-bottom: 14px; }
+    .context p { font-size: 15px; color: var(--body); }
+    .context p .big { color: var(--cyan); font-weight: 700; }
 
-    /* ===== Финальная CTA ===== */
-    .final-cta { padding: 140px 0; text-align: center; }
-    .final-cta h2 {
-      font-size: clamp(44px, 6vw, 88px);
-      line-height: 1.0;
-      margin-bottom: 28px;
-      max-width: 900px; margin-left: auto; margin-right: auto;
+    /* ============ 12 ассистентов ============ */
+    .assist-grid { grid-template-columns: repeat(4, 1fr); margin-top: 40px; }
+    .assist { position: relative; background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,0) 42%), var(--panel); border: 1px solid rgba(255,255,255,.10); border-radius: var(--radius-sm); padding: 20px; transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+    .assist:hover { transform: translateY(-4px); border-color: rgba(124,92,255,.5); box-shadow: 0 14px 40px rgba(124,92,255,.25); }
+    .assist.demo { border-color: var(--purple); background: linear-gradient(160deg, rgba(124,92,255,.14), rgba(255,255,255,0) 46%), var(--panel-hl); }
+    .assist .ic { width: 42px; height: 42px; border-radius: 11px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; background: linear-gradient(135deg, rgba(124,92,255,.28), rgba(34,211,238,.2)); border: 1px solid var(--border-strong); }
+    .assist .ic svg { width: 22px; height: 22px; stroke: var(--cyan); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .assist .code { font-family: var(--mono); font-size: 12px; color: var(--cyan); }
+    .assist .name { margin-top: 3px; color: var(--text); font-weight: 600; font-size: 15px; }
+    .assist .demo-badge { position: absolute; top: 16px; right: 16px; font-family: var(--mono); font-size: 10px; letter-spacing: .05em; text-transform: uppercase; color: #fff; background: linear-gradient(135deg, var(--purple), var(--cyan)); padding: 3px 8px; border-radius: 12px; z-index: 3; }
+    .assist .tip { position: absolute; left: 50%; bottom: calc(100% + 10px); transform: translateX(-50%) translateY(6px); width: max-content; max-width: 240px; background: var(--panel-2); border: 1px solid var(--border-strong); border-radius: 10px; padding: 12px 14px; font-size: 13px; line-height: 1.5; color: var(--body); box-shadow: 0 14px 34px rgba(0,0,0,.55); opacity: 0; pointer-events: none; transition: opacity .22s ease, transform .22s ease; z-index: 40; }
+    .assist .tip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--panel-2); }
+    .assist:hover .tip { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ============ Три отличия ============ */
+    .why-grid { grid-template-columns: repeat(3, 1fr); margin-top: 40px; }
+    .why .ic { width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, rgba(124,92,255,.25), rgba(34,211,238,.18)); border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+    .why .ic svg { width: 23px; height: 23px; stroke: var(--cyan); }
+    .why h3 { margin-bottom: 10px; font-size: 18px; }
+    .why p { font-size: 15px; color: var(--body); }
+
+    /* ============ Экономика ============ */
+    .econ-panel { background: linear-gradient(135deg, var(--panel-2), var(--panel)); border: 1px solid var(--border); border-radius: var(--radius); padding: 44px; margin-top: 36px; }
+    .econ-hero { font-size: clamp(38px, 6.5vw, 72px); font-weight: 800; color: var(--purple); letter-spacing: -0.03em; line-height: 1.02; }
+    .econ-formula { margin-top: 16px; font-family: var(--mono); font-size: 15px; color: var(--body); }
+    .econ-note { margin-top: 12px; font-size: 13px; color: var(--muted); max-width: 620px; }
+    .econ-box { margin-top: 30px; background: rgba(0,0,0,.18); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 26px; }
+    .econ-box .row { display: flex; justify-content: space-between; gap: 14px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 16px; }
+    .econ-box .row:last-child { border-bottom: none; }
+    .econ-box .row .k { color: var(--body); } .econ-box .row .v { color: var(--text); font-weight: 700; white-space: nowrap; }
+    .econ-box .row .v.good { color: var(--cyan); }
+    .prop-track { display: flex; height: 46px; border-radius: 11px; overflow: hidden; border: 1px solid var(--border-strong); margin-top: 22px; }
+    .prop-invest { width: 6%; background: linear-gradient(135deg, var(--purple), #6a4bf0); min-width: 58px; }
+    .prop-save { width: 94%; background: rgba(34,211,238,.14); display: flex; align-items: center; padding-left: 16px; }
+    .prop-save span { font-family: var(--mono); font-size: 13px; color: var(--cyan); font-weight: 600; }
+    .prop-legend { display: flex; gap: 24px; margin-top: 14px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+    .prop-legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 8px; vertical-align: middle; }
+
+    /* ============ Пакеты ============ */
+    .pkg-grid { grid-template-columns: repeat(3, 1fr); margin-top: 44px; align-items: stretch; }
+    .pkg { position: relative; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px; display: flex; flex-direction: column; }
+    .pkg.featured { background: var(--panel-hl); border: 1px solid var(--purple); box-shadow: 0 20px 60px rgba(124,92,255,.22); }
+    .pkg .badge { position: absolute; top: -13px; left: 30px; background: linear-gradient(135deg, var(--purple), var(--cyan)); color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .04em; padding: 5px 14px; border-radius: 20px; text-transform: uppercase; }
+    .pkg .pkg-name { color: var(--text); font-size: 22px; font-weight: 700; }
+    .pkg .pkg-for { color: var(--muted); font-size: 14px; margin-top: 4px; }
+    .pkg .checks { margin: 22px 0; }
+    .pkg .price { padding-top: 20px; border-top: 1px solid var(--border); }
+    .pkg .price .from { font-size: 13px; color: var(--muted); }
+    .pkg .price .val { font-size: 30px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; display: block; margin-top: 2px; }
+    .pkg .price .old { font-size: 17px; color: var(--muted); text-decoration: line-through; margin-right: 8px; }
+    .pkg .price .val.discount { color: var(--cyan); }
+    .pkg .firstclient { margin: 12px 0 0; padding: 12px 14px; background: rgba(124,92,255,.1); border: 1px solid rgba(124,92,255,.3); border-radius: 10px; font-size: 13px; color: var(--body); }
+    .pkg .firstclient b { color: var(--text); }
+    .pkg .metrics { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .pkg .metrics .m { display: flex; justify-content: space-between; font-size: 14px; }
+    .pkg .metrics .m .mk { color: var(--muted); } .pkg .metrics .m .mv { color: var(--text); font-weight: 600; }
+    .pkg .terms { margin-top: 14px; font-size: 12px; color: var(--muted); font-family: var(--mono); }
+    .pkg .btn { margin-top: 22px; }
+
+    /* ============ Демо: 2 колонки ============ */
+    .two-grid { grid-template-columns: repeat(2, 1fr); margin-top: 40px; }
+    .two-grid .card { height: 100%; }
+    .card h3 { margin-bottom: 14px; }
+    .card .lead-sm { font-size: 15px; color: var(--muted); margin-bottom: 16px; }
+    .card .disc { margin-top: 16px; font-size: 13px; color: var(--muted); border-left: 2px solid var(--purple); padding-left: 14px; }
+
+    /* ============ Таймлайн (после встречи) ============ */
+    .timeline-grid { grid-template-columns: repeat(4, 1fr); margin-top: 40px; }
+    .tl { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 24px; }
+    .tl .tln { font-family: var(--mono); font-size: 12px; color: var(--cyan); text-transform: uppercase; letter-spacing: .04em; }
+    .tl h3 { font-size: 17px; margin: 10px 0 8px; }
+    .tl ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .tl li { font-size: 14px; color: var(--body); padding-left: 14px; position: relative; }
+    .tl li::before { content: '·'; position: absolute; left: 2px; color: var(--purple); }
+    .risk-note { margin-top: 26px; padding: 18px 22px; border-left: 2px solid var(--cyan); background: rgba(34,211,238,.06); border-radius: 0 12px 12px 0; font-size: 15px; color: var(--body); }
+
+    /* ============ Команда ============ */
+    .team-panel { background: linear-gradient(135deg, var(--panel-2), var(--panel)); border: 1px solid var(--border); border-radius: var(--radius); padding: 48px; margin-top: 36px; }
+    .team-lead { font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: var(--text); max-width: 780px; letter-spacing: -0.01em; }
+    .team-panel p.body { margin-top: 20px; font-size: 16px; color: var(--body); max-width: 760px; }
+    .team-panel p.body + p.body { margin-top: 14px; }
+    .team-contacts { margin-top: 26px; font-family: var(--mono); font-size: 15px; color: var(--cyan); display: flex; gap: 8px 24px; flex-wrap: wrap; }
+
+    /* ============ Финальный CTA ============ */
+    .final-panel { position: relative; overflow: hidden; background: var(--panel-2); border: 1px solid var(--border-strong); border-radius: 26px; padding: 56px 48px; }
+    .final-glow { position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(500px 320px at 15% 0%, rgba(124,92,255,.30), transparent 60%), radial-gradient(500px 320px at 90% 110%, rgba(34,211,238,.20), transparent 60%); }
+    .final-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 44px; align-items: center; }
+    .final h2 { font-size: clamp(28px, 4.4vw, 44px); }
+    .final .sub { margin-top: 16px; color: var(--body); font-size: 18px; max-width: 460px; }
+    .final .cta-box { display: flex; flex-direction: column; gap: 16px; }
+    .final .tg-link { color: var(--cyan); font-size: 15px; font-weight: 500; }
+    .final .tg-link:hover { text-decoration: underline; }
+    .final .contacts { margin-top: 6px; font-size: 14px; color: var(--muted); line-height: 1.9; }
+    .final .contacts b { color: var(--body); }
+    .final .contacts a:hover { color: var(--cyan); }
+
+    footer { border-top: 1px solid var(--border); padding: 34px 0; }
+    .foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .reveal { opacity: 1; transform: none; transition: none; } .btn:hover, .assist:hover { transform: none; } }
+
+    /* ============ Адаптив ============ */
+    @media (max-width: 960px) {
+      .assist-grid { grid-template-columns: repeat(3, 1fr); }
+      .timeline-grid { grid-template-columns: repeat(2, 1fr); }
     }
-    .final-cta h2 .accent { color: var(--accent); }
-    .final-cta p {
-      font-size: 19px; color: var(--ink-2);
-      max-width: 560px; margin: 0 auto 48px;
-      line-height: 1.6;
+    @media (max-width: 820px) {
+      .howto-grid, .context-grid, .why-grid, .pkg-grid, .two-grid { grid-template-columns: 1fr; }
+      .pkg.featured { order: -1; }
+      .final-inner { grid-template-columns: 1fr; gap: 28px; }
+      .econ-panel, .team-panel { padding: 30px; }
+      .final-panel { padding: 40px 24px; }
     }
-    .final-cta-note {
-      margin-top: 24px;
-      font-size: 13px; color: var(--ink-3);
-    }
-    .final-cta-note a { color: var(--ink); border-bottom: 1px solid var(--rule); }
-
-    /* ===== Footer ===== */
-    footer {
-      border-top: 1px solid var(--rule);
-      padding: 36px 0;
-      background: var(--bg);
-    }
-    .footer-inner {
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 16px;
-      font-size: 14px; color: var(--ink-2);
-    }
-    .footer-links { display: flex; gap: 28px; flex-wrap: wrap; }
-    .footer-links a:hover { color: var(--accent); }
-
-    /* ===== Responsive ===== */
-    @media (max-width: 900px) {
-      .hero-grid { grid-template-columns: 1fr; gap: 40px; }
-      .hero-visual { max-width: 480px; margin: 0 auto; width: 100%; }
-      .about-grid { grid-template-columns: 1fr; }
-      .person-card { grid-template-columns: 100px 1fr; padding: 24px; gap: 20px; }
-      .process-grid { grid-template-columns: 1fr 1fr; }
-      .process-step { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.12); padding: 32px 0 !important; }
-      .process-step:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.12); padding-right: 24px !important; }
-      .process-step:nth-child(even) { padding-left: 24px !important; }
-      .process-step:nth-last-child(-n+2) { border-bottom: none; }
-      .service-row { grid-template-columns: 48px 64px 1fr auto; gap: 16px; }
-      .service-code { font-size: 22px; }
-      .nav-links { display: none; }
-      section { padding: 72px 0; }
-      .hero { padding: 48px 0 64px; }
-      .final-cta { padding: 96px 0; }
-      .section-head { margin-bottom: 40px; }
-      .hero-meta { gap: 24px; margin-top: 36px; padding-top: 24px; }
-      .hero-meta-num { font-size: 24px; }
-    }
-    @media (max-width: 640px) {
-      .container, .nav-inner { padding-left: 20px; padding-right: 20px; }
-      .nav-inner { padding-top: 14px; padding-bottom: 14px; }
-      .nav-cta { padding: 8px 14px; font-size: 13px; }
-      .hero { padding: 32px 0 56px; }
-      .hero h1 { font-size: clamp(32px, 9vw, 44px); }
-      .hero-sub { font-size: 16px; margin-bottom: 32px; }
-      .btn-blob { width: 100%; min-width: 0; font-size: 15px; }
-      .btn-blob--lg { font-size: 16px; }
-      .hero-meta { gap: 20px 28px; }
-      .hero-badge { left: 16px; bottom: 16px; padding: 10px 14px; font-size: 13px; }
-
-      .service-row { grid-template-columns: 40px 1fr auto; gap: 14px; padding: 22px 4px; }
-      .service-row:hover { margin: 0 -12px; padding-left: 16px; padding-right: 16px; }
-      .service-code { display: none; }
-      .service-icon { width: 40px; height: 40px; }
-      .service-icon .icon { width: 20px; height: 20px; }
-      .service-title { font-size: 16px; }
-      .service-desc { font-size: 13px; }
-      .service-arrow { width: 28px; height: 28px; }
-
-      .person-card { grid-template-columns: 1fr; padding: 24px; }
-      .person-photo { width: 96px; height: 96px; }
-      .person-name { font-size: 22px; }
-
-      .process-grid { grid-template-columns: 1fr; }
-      .process-step { padding: 28px 0 !important; border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.12) !important; padding-left: 0 !important; padding-right: 0 !important; }
-      .process-step:last-child { border-bottom: none !important; }
-      .step-num { margin-bottom: 16px; }
-
-      .final-cta { padding: 72px 0; }
-      .final-cta h2 { font-size: clamp(32px, 9vw, 44px); margin-bottom: 20px; }
-      .final-cta p { font-size: 16px; margin-bottom: 32px; }
-
-      h2.section-title { font-size: clamp(26px, 7vw, 34px); }
-      .section-lead { font-size: 16px; }
-
-      .footer-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .footer-links { gap: 16px 24px; }
+    @media (max-width: 560px) {
+      .assist-grid { grid-template-columns: repeat(2, 1fr); }
+      .timeline-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<nav class="nav">
-  <div class="nav-inner">
-    <a href="#" class="logo"><span class="logo-dot"></span> Евгений + Ирина</a>
-    <div class="nav-links">
-      <a href="#about">Кто мы</a>
-      <a href="#services">Что делаем</a>
-      <a href="#process">Как работаем</a>
+  <!-- ===== ШАПКА ===== -->
+  <header id="site-header">
+    <div class="container nav">
+      <a href="#top" class="logo"><span class="mark"></span><span class="full">Проект без хаоса</span></a>
+      <a class="btn btn-primary" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener">Запросить демо-встречу</a>
     </div>
-    <a href="#contact" class="nav-cta">
-      <i data-lucide="send"></i>
-      Написать
-    </a>
-  </div>
-</nav>
+  </header>
+  <span id="top"></span>
 
-<!-- HERO -->
-<header class="hero">
-  <div class="container hero-grid">
-    <div>
-      <div class="eyebrow">
-        <i data-lucide="sparkles"></i>
-        Пара инженеров-проектировщиков
-      </div>
-      <h1>
-        ИИ-ассистенты для разделов <span class="accent">АР · КР · ВК · ОВ · СС · ЭМ · ПОС · ГП · АСУТП · BIM</span>
-      </h1>
-      <p class="hero-sub">
-        Проектируем и внедряем ассистентов под конкретные разделы проектной документации. Без шаблонных «обёрток над ChatGPT» — каждое решение собрано под нормы, шаблоны и BIM-процессы вашего института.
-      </p>
-      <a href="#contact" class="btn-blob">
-        <span class="btn-blob__text">
-          <i data-lucide="send" class="icon"></i>
-          Написать в Telegram
-          <i data-lucide="arrow-right" class="icon"></i>
-        </span>
-        <span class="btn-blob__blob"></span>
-        <span class="btn-blob__blob"></span>
-        <span class="btn-blob__blob"></span>
-        <span class="btn-blob__blob"></span>
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="orb-hero"></div>
+    <div class="container">
+      <a class="ai-chip" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener" aria-label="Запросить демо в Telegram">
+        <svg class="spark" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813A3.75 3.75 0 007.466 7.89l.813-2.846A.75.75 0 019 4.5zM18 1.5a.75.75 0 01.728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 010 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 01-1.456 0l-.258-1.036a2.625 2.625 0 00-1.91-1.91l-1.036-.258a.75.75 0 010-1.456l1.036-.258a2.625 2.625 0 001.91-1.91l.258-1.036A.75.75 0 0118 1.5zM16.5 15a.75.75 0 01.712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 010 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 01-1.422 0l-.395-1.183a1.5 1.5 0 00-.948-.948l-1.183-.395a.75.75 0 010-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0116.5 15z"></path></svg>
+        <span class="ai-text">AI</span>
       </a>
-      <div class="hero-meta">
-        <div class="hero-meta-item">
-          <span class="hero-meta-num">15+</span>
-          <span class="hero-meta-label">лет в проектных институтах</span>
+      <br />
+      <span class="eyebrow">AI для проектных организаций</span>
+      <h1>AI-ассистенты для проектирования ПГС<span class="accent">Главный конструктор теперь у вас в команде</span></h1>
+      <p class="sub">12 специализированных помощников по разделам ПГС. Один из них (КР) — сейчас в деле. Запросите демо.</p>
+      <div class="cta-row">
+        <a class="btn-reveal" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener"><span>Запросить 30-минутное демо</span></a>
+        <a class="link" href="#cta">или свяжитесь с нами</a>
+      </div>
+      <p class="trust">Демо бесплатно · Оплата 50/50 · Данные в контуре заказчика</p>
+    </div>
+  </section>
+
+  <!-- ===== КАК ЭТО РАБОТАЕТ ===== -->
+  <section id="how">
+    <div class="container">
+      <span class="eyebrow reveal">Как это работает</span>
+      <h2 class="reveal">Три шага от идеи до результата</h2>
+      <div class="grid howto-grid">
+        <div class="howto reveal">
+          <div class="top"><span class="num-badge">1</span><h3>Демо-встреча</h3></div>
+          <div class="dur">30 минут</div>
+          <p>Видеозвонок или очно. Евгений показывает ассистента КР на вашем примере (или типовом).</p>
+          <div class="sub-h">Вы видите</div>
+          <ul class="checks">
+            <li>Как ассистент работает</li>
+            <li>Расчёт экономии для вашего объёма</li>
+            <li>Ответы на вопросы</li>
+          </ul>
+          <div class="foot"><b>Стоимость: бесплатно.</b> Без обязательств.</div>
         </div>
-        <div class="hero-meta-item">
-          <span class="hero-meta-num">5</span>
-          <span class="hero-meta-label">разделов под ключ</span>
+        <div class="howto reveal">
+          <div class="top"><span class="num-badge">2</span><h3>Договор и оплата 50%</h3></div>
+          <div class="dur">Если результаты понравились</div>
+          <p>Переходим к сотрудничеству по прозрачным условиям:</p>
+          <ul class="checks">
+            <li>Подписываете лицензионный договор</li>
+            <li>Платите первую половину</li>
+            <li>Обсуждаем сроки установки</li>
+          </ul>
+          <div class="foot">IP защищена (договор + NDA). Обязательства и сроки — с обеих сторон.</div>
         </div>
-        <div class="hero-meta-item">
-          <span class="hero-meta-num">2</span>
-          <span class="hero-meta-label">инженера, никаких субподрядов</span>
+        <div class="howto reveal">
+          <div class="top"><span class="num-badge">3</span><h3>Установка, обучение, оплата 50%</h3></div>
+          <div class="dur">2–4 недели</div>
+          <p>Устанавливаем ассистентов на ваш ПК:</p>
+          <ul class="checks">
+            <li>Все 12 ассистентов (или выбранные)</li>
+            <li>Настройка на 10–50 рабочих мест</li>
+            <li>Обучение вашей команды</li>
+            <li>Первые недели: поддержка и доработки</li>
+          </ul>
+          <div class="foot">Вторая половина — когда установка завершена, команда обучена и ассистенты работают в боевом режиме.</div>
         </div>
       </div>
     </div>
-    <div class="hero-visual">
-      <img src="images/10.jpg" alt="Евгений и Ирина за работой" class="photo" />
-      <div class="hero-badge">
-        <i data-lucide="map-pin"></i>
-        <div><strong>Москва</strong> · работаем удалённо</div>
+  </section>
+
+  <!-- ===== ОТРАСЛЕВОЙ КОНТЕКСТ ===== -->
+  <section id="context">
+    <div class="container">
+      <span class="eyebrow reveal">Почему это актуально</span>
+      <h2 class="reveal">Реальная боль проектных организаций</h2>
+      <div class="grid context-grid">
+        <div class="context reveal">
+          <div class="n">01</div>
+          <p>Проектные организации тратят <strong>30–40% рабочего дня инженеров</strong> на ручную рутину: ввод данных, проверку по СП и ГОСТ, поиск решений в нормативных документах, согласование с соседними разделами.</p>
+        </div>
+        <div class="context reveal">
+          <div class="n">02</div>
+          <p>На базе знаний (СП, ГОСТ, ПП 87, реестры замечаний, типовые альбомы) можно построить ассистента, который подскажет проверенное решение <strong>за секунды</strong>.</p>
+        </div>
+        <div class="context reveal">
+          <div class="n">03</div>
+          <p>50 инженеров, теряющих по 1,5 часа в день на рутину, — это <span class="big">≈ 2,3 млн ₽ в месяц</span>. За год без этих потерь — <span class="big">27,7 млн ₽</span>.</p>
+        </div>
       </div>
     </div>
-  </div>
-</header>
+  </section>
 
-<!-- КТО МЫ -->
-<section id="about" class="about">
-  <div class="container">
-    <div class="section-head">
-      <span class="section-tag">Кто мы</span>
-      <h2 class="section-title">Двое инженеров, которые сами проектировали — и устали от рутины</h2>
-      <p class="section-lead">
-        Мы не консультанты со стороны. Каждый из нас прошёл путь от стажёра до ведущего специалиста и знает, где в работе ГИПа теряются часы и сорваны сроки.
-      </p>
+  <!-- ===== 12 АССИСТЕНТОВ ===== -->
+  <section id="assistants">
+    <div class="container">
+      <span class="eyebrow reveal">Линейка</span>
+      <h2 class="reveal">12 ассистентов под разделы ПГС</h2>
+      <p class="section-lead reveal">Отдельный ассистент на каждую специализацию. Ассистент КР (главный конструктор) — уже готов и показывается на демо.</p>
+      <div class="grid assist-grid">
+        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-6h6v6"/></svg></div><span class="code">АР</span><div class="name">Архитектурные решения</div><div class="tip">Проверка ТЗ и решений на соответствие нормам, координация смежных разделов, оформление пояснительных записок, ТЭП и спецификаций.</div></div>
+        <div class="assist demo reveal"><span class="demo-badge">В демо</span><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 7h18M3 17h18M7 7v10M17 7v10M3 7v10M21 7v10"/></svg></div><span class="code">КР</span><div class="name">Конструктивные решения</div><div class="tip">Подбор узлов и типовых решений, проверка спецификаций арматуры и металла, расчётные пояснительные записки.</div></div>
+        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5zM3 7l9 5 9-5M12 12v10"/></svg></div><span class="code">BIM</span><div class="name">BIM-координация</div><div class="tip">Проверка коллизий, контроль атрибутов и стандартов модели, сборка сводной модели и выгрузка ведомостей.</div></div>
+        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2s4 3 4 7c0 1.5-1 3-1 3s0-2-2-2c0 3-2 3-2 5a3 3 0 0 0 6 0c0-4-5-6-3-16z"/></svg></div><span class="code">ПБ</span><div class="name">Пожарная безопасность</div><div class="tip">Категорирование помещений, расчёты пожарного риска, проверка соответствия СП — раздел МОПБ и спецификации систем противопожарной защиты.</div></div>
+        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 5h18v16H3zM3 10h18M8 3v4M16 3v4"/></svg></div><span class="code">ПОС</span><div class="name">Организация строительства</div><div class="tip">Календарные планы, стройгенпланы, потребность в ресурсах и оформление пояснительной записки по составу ПОС.</div></div>
+        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 8a4 4 0 100 8 4 4 0 000-8z"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></div><span class="code">ТХ</span><div class="name">Технология строительства</div><div class="tip">Описание технологических процессов, подбор оборудования, перечни и спецификации, увязка с разделами АСУТП и ЭМ.</div></div>
+        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M5 5h14v14H5zM9 9h6v6H9zM9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg></div><span class="code">АСУТП</span><div class="name">Автоматизация ТП</div><div class="tip">Перечни сигналов и контуров регулирования, функциональные схемы автоматизации, спецификации КИПиА.</div></div>
+        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></div><span class="code">ЭМ</span><div class="name">Электроснабжение</div><div class="tip">Подбор кабельной продукции, расчёт сечений, кабельные журналы и схемы питания.</div></div>
+        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3s6 6 6 10a6 6 0 0 1-12 0c0-4 6-10 6-10z"/></svg></div><span class="code">ВК</span><div class="name">Водоснабжение и канализация</div><div class="tip">Расчёты по СП, спецификации трубопроводов и арматуры, проверка стыков с разделами ОВ и ЭМ.</div></div>
+        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 8h12a3 3 0 1 0-3-3M3 12h17M3 16h10a3 3 0 1 1-3 3"/></svg></div><span class="code">ОВ</span><div class="name">Отопление и вентиляция</div><div class="tip">Подбор оборудования по техническим требованиям, ведомости систем, сборка тома по шаблону.</div></div>
+        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 10-5-10-5zM2 13l10 5 10-5M2 18l10 4 10-4"/></svg></div><span class="code">ГТ</span><div class="name">Геотехнические решения</div><div class="tip">Обработка данных инженерной геологии, характеристики грунтов и оснований, увязка с разделом КР, оформление отчёта.</div></div>
+        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M2 8.5a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0M12 19h.01"/></svg></div><span class="code">СС</span><div class="name">Слаботочные сети</div><div class="tip">Структурированные кабельные сети, видеонаблюдение, СКУД, пожарная сигнализация — подбор оборудования и спецификаций.</div></div>
+      </div>
     </div>
+  </section>
 
-    <div class="about-grid">
-      <div class="person-card">
-        <div class="person-photo">
-          <img src="images/11.jpg" alt="Евгений" class="photo" />
+  <!-- ===== ТРИ ОТЛИЧИЯ ===== -->
+  <section id="why">
+    <div class="container">
+      <span class="eyebrow reveal">Почему это другое</span>
+      <h2 class="reveal">Три принципиальных отличия</h2>
+      <div class="grid why-grid">
+        <div class="card why reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <h3>Данные остаются в контуре</h3>
+          <p>После установки ассистенты работают на вашем ПК. Рабочие файлы не уходят вовне.</p>
         </div>
-        <div>
-          <h3 class="person-name">Евгений</h3>
-          <div class="person-role">Конструктор, технический директор · 20 лет в профессии</div>
-          <p class="person-bio">
-            Вёл крупные общественные и промышленные объекты. Знает, как разделы стыкуются между собой и где обычно ломается коммуникация со смежниками.
-          </p>
-          <div class="person-tags">
-            <span class="tag">АР</span>
-            <span class="tag">КЖ</span>
-            <span class="tag">BIM-координация</span>
-            <span class="tag">ГИП</span>
+        <div class="card why reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg></div>
+          <h3>Вы владеете активом</h3>
+          <p>После оплаты — ваши: промпты, база знаний, методология. Без ежемесячных лицензий. Мы обновляем базу раз в квартал, чтобы она не устаревала.</p>
+        </div>
+        <div class="card why reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+          <h3>Быстрое внедрение</h3>
+          <p>Демо на встречу, договор за день, установка 2–4 недели. Не 6 месяцев согласований, как обычные IT-проекты.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ЭКОНОМИКА ===== -->
+  <section id="economics">
+    <div class="container">
+      <span class="eyebrow reveal">Экономика</span>
+      <h2 class="reveal">Что это даёт вашей организации</h2>
+      <p class="section-lead reveal">Расчёт для организации на 50 инженеров.</p>
+      <div class="econ-panel reveal">
+        <div class="econ-hero">≈ 2,3 млн ₽ в месяц экономии</div>
+        <div class="econ-formula">50 инженеров × 1,5 ч/день × 22 рабочих дня × 1 400 ₽/ч</div>
+        <p class="econ-note">Это консервативная оценка. На разделах ОВ, ПБ, ЭМ часто 2–3 ч/день; на КР, АР — 1–1,5 ч/день. Точный расчёт для вашей организации обсудим на демо.</p>
+        <div class="econ-box">
+          <div class="row"><span class="k">Экономия клиента за год</span><span class="v good">≈ 27,7 млн ₽</span></div>
+          <div class="row"><span class="k">Ваша инвестиция (пакет)</span><span class="v">≈ 975 тыс – 2,3 млн ₽</span></div>
+          <div class="row"><span class="k">Доля инвестиции от создаваемой ценности</span><span class="v">3,5–8%</span></div>
+          <div class="row"><span class="k">Окупаемость</span><span class="v good">≈ 10–30 дней</span></div>
+        </div>
+        <div class="prop-track">
+          <div class="prop-invest"></div>
+          <div class="prop-save"><span>92–96,5% ценности остаются у вас</span></div>
+        </div>
+        <div class="prop-legend">
+          <div><span class="dot" style="background:var(--purple)"></span>Инвестиция ≈ 3,5–8% от создаваемой ценности</div>
+          <div><span class="dot" style="background:rgba(34,211,238,.4)"></span>Остаток года — чистая прибыль</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ПАКЕТЫ ===== -->
+  <section id="packages">
+    <div class="container">
+      <span class="eyebrow reveal">Пакеты</span>
+      <h2 class="reveal">Три варианта для разных размеров</h2>
+      <div class="grid pkg-grid">
+        <!-- Старт -->
+        <div class="pkg reveal">
+          <div class="pkg-name">Старт</div>
+          <div class="pkg-for">Для малых бюро · 10–30 чел</div>
+          <ul class="checks">
+            <li>3 ассистента (выбираете)</li>
+            <li>Установка на 10 рабочих мест</li>
+            <li>Обучение 5–10 человек</li>
+            <li>Разовое обновление базы</li>
+          </ul>
+          <div class="price"><span class="from">Инвестиция</span><span class="val">235 000 ₽</span></div>
+          <div class="metrics">
+            <div class="m"><span class="mk">Экономия / год</span><span class="mv">≈ 8–12 млн ₽</span></div>
+            <div class="m"><span class="mk">Окупаемость</span><span class="mv">≈ 3–4 недели</span></div>
+          </div>
+          <div class="terms">50% сейчас · 50% после установки и обучения</div>
+          <a class="btn btn-ghost btn-block" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener">Узнать больше</a>
+        </div>
+        <!-- Практика -->
+        <div class="pkg featured reveal">
+          <div class="badge">Рекомендуем</div>
+          <div class="pkg-name">Практика</div>
+          <div class="pkg-for">Для среднего ПИ · 50–150 чел</div>
+          <ul class="checks">
+            <li>10 ассистентов</li>
+            <li>Установка на 30 рабочих мест</li>
+            <li>Обучение 10–15 человек</li>
+            <li>Квартальные обновления (1 год)</li>
+          </ul>
+          <div class="price"><span class="from">Базовая инвестиция</span><span class="val"><span class="old">975 000 ₽</span></span><span class="val discount">780 000 ₽</span></div>
+          <div class="firstclient"><b>Для первого клиента — скидка 20%.</b> Условие: результаты становятся кейсом в нашем портфолио (без публикации имени, только цифры).</div>
+          <div class="metrics">
+            <div class="m"><span class="mk">Экономия / год</span><span class="mv">≈ 27,7 млн ₽</span></div>
+            <div class="m"><span class="mk">Окупаемость</span><span class="mv">≈ 10 дней</span></div>
+          </div>
+          <div class="terms">50% сейчас · 50% после установки и обучения</div>
+          <a class="btn btn-primary btn-block" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener">Запросить демо со скидкой 20%</a>
+        </div>
+        <!-- Корпоратив -->
+        <div class="pkg reveal">
+          <div class="pkg-name">Корпоратив</div>
+          <div class="pkg-for">Для крупной ПО · 200+ чел</div>
+          <ul class="checks">
+            <li>Все 12 ассистентов</li>
+            <li>Кастомизация под процессы</li>
+            <li>Установка на 50+ рабочих мест</li>
+            <li>Обучение 3 потока (45–60 чел)</li>
+            <li>Квартальные обновления (1 год)</li>
+          </ul>
+          <div class="price"><span class="from">Инвестиция</span><span class="val">2 300 000 ₽</span></div>
+          <div class="metrics">
+            <div class="m"><span class="mk">Экономия / год</span><span class="mv">≈ 110+ млн ₽</span></div>
+            <div class="m"><span class="mk">Окупаемость</span><span class="mv">≈ 7–10 дней</span></div>
+          </div>
+          <div class="terms">50% сейчас · 50% после установки и обучения</div>
+          <a class="btn btn-ghost btn-block" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener">Договориться о встрече</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ДЕМО: ЧТО ПРОИСХОДИТ ===== -->
+  <section id="demo">
+    <div class="container">
+      <span class="eyebrow reveal">Демо-встреча</span>
+      <h2 class="reveal">Что вы увидите на демо</h2>
+      <div class="grid two-grid">
+        <div class="card reveal">
+          <h3>Ассистент КР в работе</h3>
+          <p class="lead-sm">Евгений показывает ассистента КР (главный конструктор) на реальном примере или вашем проекте.</p>
+          <ul class="checks">
+            <li>Проверить конструктивную схему по СП 63 (железобетон)</li>
+            <li>Подсказать решение фундамента по грунтовым условиям (СП 22, 24)</li>
+            <li>Проверить армирование по нормам</li>
+            <li>Найти коллизии с соседними разделами</li>
+          </ul>
+        </div>
+        <div class="card reveal">
+          <h3>Ваши цифры</h3>
+          <p class="lead-sm">Во время встречи обсудим конкретику вашей организации:</p>
+          <ul class="checks">
+            <li>Сколько часов в день теряет ваша команда</li>
+            <li>Какие разделы приоритетны (ОВ, КР, ПБ?)</li>
+            <li>Расчёт вашей конкретной экономии</li>
+            <li>Какие пакеты подходят вашему размеру</li>
+            <li>Сроки и условия установки</li>
+          </ul>
+          <p class="disc">Никаких обязательств. Просто данные для решения.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ПОСЛЕ ВСТРЕЧИ ===== -->
+  <section id="after">
+    <div class="container">
+      <span class="eyebrow reveal">После встречи</span>
+      <h2 class="reveal">Если результаты понравились</h2>
+      <div class="grid timeline-grid">
+        <div class="tl reveal">
+          <div class="tln">День 1–2</div>
+          <h3>Отправляем КП</h3>
+          <ul>
+            <li>Расчёт экономики вашей организации</li>
+            <li>Выбранный пакет и цены</li>
+            <li>Договор, готовый к подписанию</li>
+            <li>Сроки и этапы</li>
+          </ul>
+        </div>
+        <div class="tl reveal">
+          <div class="tln">День 3–5</div>
+          <h3>Согласование и подписание</h3>
+          <ul>
+            <li>Вопросы по договору решаем быстро</li>
+            <li>Оплата первой половины</li>
+          </ul>
+        </div>
+        <div class="tl reveal">
+          <div class="tln">После оплаты</div>
+          <h3>Установка</h3>
+          <ul>
+            <li>Согласуем удобный день</li>
+            <li>2–4 недели: установка и обучение</li>
+            <li>Поддержка в боевом режиме</li>
+          </ul>
+        </div>
+        <div class="tl reveal">
+          <div class="tln">После внедрения</div>
+          <h3>Оплата 50%</h3>
+          <ul>
+            <li>Установка завершена</li>
+            <li>Команда обучена и работает</li>
+            <li>Платите вторую половину</li>
+          </ul>
+        </div>
+      </div>
+      <p class="risk-note reveal"><strong>Риск минимален:</strong> у вас есть демо, вы видите результат, подписываете договор. До договора ничего не устанавливаем.</p>
+    </div>
+  </section>
+
+  <!-- ===== КОМАНДА ===== -->
+  <section id="team">
+    <div class="container">
+      <span class="eyebrow reveal">Кто это делает</span>
+      <div class="team-panel reveal">
+        <p class="team-lead">Мы не AI-компания, обслуживающая отрасль. Мы проектировщики, встроившие AI в свою практику.</p>
+        <p class="body">20 лет в ПГС — это не слоган, это база знаний. Каждый ассистент — результат анализа реальных проблем и ошибок на наших проектах.</p>
+        <p class="body">Структурированная база знаний (СП, ГОСТ, ПП 87, реестры замечаний, типовые решения) — не украдена, не скачана из интернета. Это наша работа.</p>
+        <p class="body">По любым техническим вопросам или сомнениям — напишите или позвоните. Ответим честно.</p>
+        <div class="team-contacts">
+          <a href="tel:+79507726411">+7 950 772-64-11</a>
+          <a href="mailto:ask.kozurev@gmail.com">ask.kozurev@gmail.com</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ФИНАЛЬНЫЙ CTA ===== -->
+  <section id="cta">
+    <div class="container">
+      <div class="final-panel reveal">
+        <div class="final-glow"></div>
+        <div class="final-inner final">
+          <div>
+            <h2>Давайте проверим на вашем примере</h2>
+            <p class="sub">Демо 30 минут. Никаких обязательств. Либо видите результат и идёте дальше, либо спасибо за время.</p>
+          </div>
+          <div class="cta-box">
+            <a class="btn btn-primary btn-lg btn-block" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener">Запросить демо со скидкой 20%</a>
+            <a class="tg-link" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener">Или напишите в Telegram: @EvgeniyKotzur</a>
+            <div class="contacts">
+              <b>Евгений Коцур</b><br />
+              <a href="tel:+79507726411">+7 950 772-64-11</a><br />
+              <a href="mailto:ask.kozurev@gmail.com">ask.kozurev@gmail.com</a><br />
+              Telegram: <a href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener">@EvgeniyKotzur</a><br />
+              Пн–Пт 10–18 МСК
+            </div>
           </div>
         </div>
       </div>
-
-      <div class="person-card">
-        <div class="person-photo">
-          <img src="images/12.jpg" alt="Ирина" class="photo" />
-        </div>
-        <div>
-          <h3 class="person-name">Ирина</h3>
-          <div class="person-role">Инженер-проектировщик · 17 лет в профессии</div>
-          <p class="person-bio">
-            Специализируется на инженерных разделах: ОВ, ВК, ЭОМ. Параллельно — практика в LLM-инжиниринге и автоматизации технических расчётов.
-          </p>
-          <div class="person-tags">
-            <span class="tag">ОВ</span>
-            <span class="tag">ВК</span>
-            <span class="tag">ЭОМ</span>
-            <span class="tag">LLM-pipelines</span>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ЧТО ДЕЛАЕМ -->
-<section id="services">
-  <div class="container">
-    <div class="section-head">
-      <span class="section-tag">Что делаем</span>
-      <h2 class="section-title">ИИ-ассистенты под разделы проектной документации</h2>
-      <p class="section-lead">
-        Каждый ассистент знает СП, ГОСТы и внутренние шаблоны вашего института. Помогает проверять, оформлять и собирать тома — а не просто «отвечает на вопросы».
-      </p>
+  <footer>
+    <div class="container foot">
+      <div>© Проект без хаоса · AI-ассистенты для проектирования ПГС</div>
+      <div>ask.kozurev@gmail.com · +7 950 772-64-11</div>
     </div>
+  </footer>
 
-    <div class="services-list">
-      <div class="service-row">
-        <div class="service-icon"><i data-lucide="building-2" class="icon"></i></div>
-        <div class="service-code">АР</div>
-        <div class="service-content">
-          <div class="service-title">Архитектурные решения</div>
-          <div class="service-desc">Проверка ТЗ, генерация ведомостей, оформление пояснительных записок и спецификаций.</div>
-        </div>
-        <div class="service-arrow"><i data-lucide="arrow-up-right" class="icon"></i></div>
-      </div>
+  <script>
+    var header = document.getElementById('site-header');
+    function onScroll() { if (window.scrollY > 12) header.classList.add('scrolled'); else header.classList.remove('scrolled'); }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
 
-      <div class="service-row">
-        <div class="service-icon"><i data-lucide="hard-hat" class="icon"></i></div>
-        <div class="service-code">КР</div>
-        <div class="service-content">
-          <div class="service-title">Конструктивные решения</div>
-          <div class="service-desc">Подбор узлов и типовых решений, проверка спецификаций арматуры и металла, расчётные пояснительные.</div>
-        </div>
-        <div class="service-arrow"><i data-lucide="arrow-up-right" class="icon"></i></div>
-      </div>
-
-      <div class="service-row">
-        <div class="service-icon"><i data-lucide="droplets" class="icon"></i></div>
-        <div class="service-code">ВК</div>
-        <div class="service-content">
-          <div class="service-title">Водоснабжение и канализация</div>
-          <div class="service-desc">Расчёты по СП, спецификации трубопроводов и арматуры, проверка стыков с разделами ОВ и ЭМ.</div>
-        </div>
-        <div class="service-arrow"><i data-lucide="arrow-up-right" class="icon"></i></div>
-      </div>
-
-      <div class="service-row">
-        <div class="service-icon"><i data-lucide="fan" class="icon"></i></div>
-        <div class="service-code">ОВ</div>
-        <div class="service-content">
-          <div class="service-title">Отопление и вентиляция</div>
-          <div class="service-desc">Подбор оборудования по техническим требованиям, ведомости систем, сборка тома по шаблону.</div>
-        </div>
-        <div class="service-arrow"><i data-lucide="arrow-up-right" class="icon"></i></div>
-      </div>
-
-      <div class="service-row">
-        <div class="service-icon"><i data-lucide="network" class="icon"></i></div>
-        <div class="service-code">СС</div>
-        <div class="service-content">
-          <div class="service-title">Системы связи (слаботочные)</div>
-          <div class="service-desc">Структурированные кабельные сети, видеонаблюдение, СКУД, пожарная сигнализация — подбор оборудования и оформление спецификаций.</div>
-        </div>
-        <div class="service-arrow"><i data-lucide="arrow-up-right" class="icon"></i></div>
-      </div>
-
-      <div class="service-row">
-        <div class="service-icon"><i data-lucide="zap" class="icon"></i></div>
-        <div class="service-code">ЭМ</div>
-        <div class="service-content">
-          <div class="service-title">Силовое электрооборудование</div>
-          <div class="service-desc">Подбор кабельной продукции, расчёт сечений, кабельные журналы и схемы питания.</div>
-        </div>
-        <div class="service-arrow"><i data-lucide="arrow-up-right" class="icon"></i></div>
-      </div>
-
-      <div class="service-row">
-        <div class="service-icon"><i data-lucide="clipboard-list" class="icon"></i></div>
-        <div class="service-code">ПОС</div>
-        <div class="service-content">
-          <div class="service-title">Проект организации строительства</div>
-          <div class="service-desc">Календарные планы, стройгенпланы, потребность в ресурсах и оформление пояснительной записки по составу ПОС.</div>
-        </div>
-        <div class="service-arrow"><i data-lucide="arrow-up-right" class="icon"></i></div>
-      </div>
-
-      <div class="service-row">
-        <div class="service-icon"><i data-lucide="map" class="icon"></i></div>
-        <div class="service-code">ГП</div>
-        <div class="service-content">
-          <div class="service-title">Генеральный план</div>
-          <div class="service-desc">Ведомости планировки и благоустройства, баланс территории, проверка посадки и привязок объектов.</div>
-        </div>
-        <div class="service-arrow"><i data-lucide="arrow-up-right" class="icon"></i></div>
-      </div>
-
-      <div class="service-row">
-        <div class="service-icon"><i data-lucide="cpu" class="icon"></i></div>
-        <div class="service-code">АСУТП</div>
-        <div class="service-content">
-          <div class="service-title">Автоматизация технологических процессов</div>
-          <div class="service-desc">Перечни сигналов и контуров регулирования, функциональные схемы автоматизации, спецификации КИПиА.</div>
-        </div>
-        <div class="service-arrow"><i data-lucide="arrow-up-right" class="icon"></i></div>
-      </div>
-
-      <div class="service-row">
-        <div class="service-icon"><i data-lucide="boxes" class="icon"></i></div>
-        <div class="service-code">BIM</div>
-        <div class="service-content">
-          <div class="service-title">BIM-координация</div>
-          <div class="service-desc">Проверка коллизий, контроль атрибутов и стандартов модели, сборка сводной модели и выгрузка ведомостей.</div>
-        </div>
-        <div class="service-arrow"><i data-lucide="arrow-up-right" class="icon"></i></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- КАК РАБОТАЕМ -->
-<section id="process" class="process">
-  <div class="container">
-    <div class="section-head">
-      <span class="section-tag">Как работаем</span>
-      <h2 class="section-title">От первого разговора до работающего ассистента — 4 шага</h2>
-      <p class="section-lead">
-        Не «коробочное решение». Каждое внедрение начинается с того, что мы садимся с вашими ГИПами и разбираемся, где именно теряется время.
-      </p>
-    </div>
-
-    <div class="process-grid">
-      <div class="process-step">
-        <div class="step-num">01 / БРИФ</div>
-        <h3 class="step-title">Разбираем рутину</h3>
-        <p class="step-desc">
-          Одна-две встречи. Смотрим, какие задачи ваши инженеры повторяют ежедневно, и где автоматизация даст реальный эффект.
-        </p>
-        <div class="step-meta">3–5 дней</div>
-      </div>
-
-      <div class="process-step">
-        <div class="step-num">02 / БАЗА ЗНАНИЙ</div>
-        <h3 class="step-title">Собираем контекст</h3>
-        <p class="step-desc">
-          Подключаем СП, ГОСТы, корпоративные шаблоны и типовые решения. Формируем закрытую базу знаний — только под вас.
-        </p>
-        <div class="step-meta">1–2 недели</div>
-      </div>
-
-      <div class="process-step">
-        <div class="step-num">03 / ВНЕДРЕНИЕ</div>
-        <h3 class="step-title">Запускаем пилот</h3>
-        <p class="step-desc">
-          Передаём ассистента в работу 2–3 инженерам. Корректируем по обратной связи, дорабатываем под рабочие сценарии.
-        </p>
-        <div class="step-meta">2–3 недели</div>
-      </div>
-
-      <div class="process-step">
-        <div class="step-num">04 / ПОДДЕРЖКА</div>
-        <h3 class="step-title">Сопровождаем</h3>
-        <p class="step-desc">
-          Обновления при изменении норм, обучение новых сотрудников, расширение под смежные разделы. Без скрытых платежей.
-        </p>
-        <div class="step-meta">постоянно</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ФИНАЛЬНАЯ CTA -->
-<section id="contact" class="final-cta">
-  <div class="container">
-    <h2>Расскажите про <span class="accent">вашу компанию</span> — посмотрим, что можно автоматизировать</h2>
-    <p>Один разговор в Telegram, без презентаций и менеджеров. Ответим в течение рабочего дня.</p>
-    <a href="https://t.me/" class="btn-blob btn-blob--lg">
-      <span class="btn-blob__text">
-        <i data-lucide="send" class="icon"></i>
-        Написать в Telegram
-        <i data-lucide="arrow-right" class="icon"></i>
-      </span>
-      <span class="btn-blob__blob"></span>
-      <span class="btn-blob__blob"></span>
-      <span class="btn-blob__blob"></span>
-      <span class="btn-blob__blob"></span>
-    </a>
-    <div class="final-cta-note">
-      Или email — <a href="mailto:hello@example.com">hello@example.com</a>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="container footer-inner">
-    <div>© 2026 · Евгений + Ирина</div>
-    <div class="footer-links">
-      <a href="mailto:hello@example.com">hello@example.com</a>
-      <a href="https://t.me/">t.me / @handle</a>
-    </div>
-  </div>
-</footer>
-
-<script>
-  // Инициализация иконок Lucide после загрузки DOM
-  if (window.lucide) lucide.createIcons();
-</script>
-
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if ('IntersectionObserver' in window && !reduced) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+    } else {
+      document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+    }
+  </script>
 </body>
 </html>
