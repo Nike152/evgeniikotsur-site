@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="470" viewBox="0 0 680 470" fill="none">
+  <defs><pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse"><path d="m0 8 8-8" stroke="#59634e" stroke-width=".8"/></pattern></defs>
+  <g stroke="#505c49" stroke-width=".7" stroke-dasharray="8 6"><path d="M165 75v285M485 75v285M65 225h540"/></g>
+  <g stroke="#b4bfa8" stroke-width="1.5"><path d="M100 145h130v55H100zM140 200h50v95h-50zM390 145h190v55H390zM460 200h50v95h-50z" fill="url(#hatch)"/><path d="M100 145V95m130 50V95M100 108h130M390 145V95m190 50V95M390 108h190" stroke-width=".8"/><path d="m96 112 8-8m122 8 8-8m152 8 8-8m182 8 8-8" stroke-width=".8"/></g>
+  <g font-family="Arial,sans-serif" fill="#b4bfa8"><text x="165" y="94" text-anchor="middle" font-size="14">400</text><text x="485" y="94" text-anchor="middle" font-size="14">600</text><text x="165" y="340" text-anchor="middle" font-size="20">У-2</text><text x="485" y="340" text-anchor="middle" font-size="20">У-2</text><text x="165" y="394" text-anchor="middle" font-size="12" fill="#8e9984">Фрагмент А</text><text x="485" y="394" text-anchor="middle" font-size="12" fill="#8e9984">Фрагмент Б</text></g>
+  <g stroke="#b9a177" stroke-width="1.2"><ellipse cx="165" cy="334" rx="39" ry="25"/><ellipse cx="485" cy="334" rx="39" ry="25"/><path d="M204 334h242" stroke-dasharray="4 5"/><path d="m320 326 8 8-8 8"/></g><path d="M320 419h40" stroke="#53604a"/><path d="M340 409v20" stroke="#53604a"/>
+</svg>

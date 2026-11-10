@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="800" viewBox="0 0 720 800" fill="none">
+  <defs><pattern id="grid" width="38" height="38" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)"><path d="M38 0H0v38" stroke="#202622" stroke-width=".6"/></pattern><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse"><path d="m0 5 5-5" stroke="#586050" stroke-width=".55"/></pattern></defs>
+  <path d="M39 177h642v449H39z" fill="url(#grid)" opacity=".45"/>
+  <g stroke="#455045" stroke-width=".7"><path d="M53 161v20m-10-10h20M658 161v20m-10-10h20M53 621v20m-10-10h20M658 621v20m-10-10h20"/></g>
+  <g stroke-linejoin="round" stroke-linecap="round">
+    <path d="m80 550 278-159 286 165-278 160Z" stroke="#485247" stroke-width="1"/>
+    <path d="m80 531 278-159 286 165-278 160Z" fill="#111512" stroke="#66705f"/>
+    <g stroke="#353d34" stroke-width=".8"><path d="m122 531 236-135 243 141-235 135Zm49 0 187-107 194 113-186 106Zm49 0 138-79 145 85-137 78ZM80 550v-19m564 25v-19M366 697v19"/><path d="m169 480 285 165m-194-217 286 165M219 610l278-159M269 639l278-159"/></g>
+    <path d="m122 475 236-136 244 141-236 136Z" stroke="#88917c" stroke-width="1.3" fill="#10130f"/>
+    <path d="M122 475V310l236-136 244 141v165M366 616V451" stroke="#8a9581" stroke-width="1.2"/>
+    <path d="m122 310 244 141 236-136-244-141Z" fill="#11150f" stroke="#bfc7b4" stroke-width="1.5"/>
+    <path d="m137 310 229 132 221-127-229-132Z" stroke="#5d6956" stroke-width="1"/>
+    <path d="M122 365 366 506l236-136M122 420l244 141 236-136" stroke="#78856c" stroke-width="1"/>
+    <g stroke="#56624e" stroke-width=".8"><path d="M174 340v165m49-137v165m49-136v165m49-136v165m94-165v165m48-193v165m48-193v165m48-193v165"/><path d="m137 373 215 124m-215-69 215 124m29-55 206-119m-206 174 206-119"/></g>
+    <g stroke="#a6b396" stroke-width="1.2"><path d="m187 272 244 141M251 235l244 141M315 198l244 141M185 347l236-136M247 383l236-136M309 418l236-136"/></g>
+    <g fill="#161c13" stroke="#bfc7b4" stroke-width="1.1"><path d="m187 272 9-5 8 5-9 5Zm64-37 9-5 8 5-9 5Zm64-37 9-5 8 5-9 5Zm-68 185 9-5 8 5-9 5Zm64-37 9-5 8 5-9 5Zm64-37 9-5 8 5-9 5Zm-66 109 9-5 8 5-9 5Zm64-37 9-5 8 5-9 5Zm64-37 9-5 8 5-9 5Z"/></g>
+    <path d="m283 291 63-36 64 37-63 36Z" fill="url(#hatch)" stroke="#a1ad92" stroke-width="1.1"/>
+    <g stroke="#7a886c" stroke-width=".8"><path d="m294 291 53 30m-43-36 53 30m-43-36 53 30m-43-36 53 30m-43-36 53 30"/></g>
+    <path d="m346 255 1 73m-64-37 127 1" stroke="#6d7b5f" stroke-width=".7" stroke-dasharray="3 5"/>
+    <path d="m83 300 244-141M77 286l13 23m231-157 13 23M82 290l246-142M624 299 379 158m-6 5 12-20m234 164 12-20" stroke="#65705b" stroke-width=".7"/>
+    <path d="m99 563 235 135M95 556l8 15m227 120 8 15m294-129-235 135m-4-7 8 15m227-150 8 15" stroke="#65705b" stroke-width=".7"/>
+    <g stroke="#7c876f" stroke-width=".7" stroke-dasharray="4 8"><path d="m64 357 558-322M107 437 665 115M64 437l557 322M64 273l557 322" opacity=".45"/></g>
+    <circle cx="347" cy="291" r="48" stroke="#b9a177" stroke-width="1.3"/><circle cx="347" cy="291" r="54" stroke="#b9a177" stroke-width=".5" stroke-dasharray="2 5"/>
+    <path d="m388 264 75-76h142" stroke="#b9a177" stroke-width="1"/><circle cx="388" cy="264" r="3" fill="#b9a177" stroke="none"/><path d="M616 181v14m-7-7h14" stroke="#b9a177"/>
+    <path d="M366 451v165m-244-141 244 141 236-136" stroke="#bfc7b4" stroke-width="1.3"/>
+  </g>
+  <g font-family="Arial,sans-serif" font-size="11" fill="#a4ad97"><text x="471" y="175" fill="#c5af89" letter-spacing="1">ПРОВЕРИТЬ УЗЕЛ</text><text x="191" y="211" transform="rotate(-30 191 211)">18 000</text><text x="470" y="214" transform="rotate(30 470 214)">18 000</text><text x="196" y="636" transform="rotate(30 196 636)">6 000</text><text x="481" y="651" transform="rotate(-30 481 651)">6 000</text><text x="72" y="755" font-family="monospace" font-size="9" fill="#77816e" letter-spacing="1.5">УЧЕБНАЯ СХЕМА / НЕ ДЛЯ СТРОИТЕЛЬСТВА</text></g>
+</svg>

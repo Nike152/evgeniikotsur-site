@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#090a0a"/>
+  <g fill="none" stroke="#303432"><path d="M55 99h1090M55 548h1090"/><path d="m830 198 120-69 154 89v175l-120 69-154-89Zm0 0 154 89 120-69m-120 69v175m-154-205 154 89 120-69m-274 39 154 89 120-69" stroke="#9ba58c" stroke-width="1.5"/><path d="m830 198 154 89 120-69-154-89Z" stroke="#bcc6af" stroke-width="2"/><circle cx="960" cy="215" r="38" stroke="#b9a177" stroke-width="1.5"/><path d="m990 190 55-63h65" stroke="#b9a177"/></g>
+  <g font-family="Arial,sans-serif" fill="#e9e8e2"><text x="56" y="63" font-size="18">ЕВГЕНИЙ КОЦУР / ПРАКТИЧЕСКИЙ КУРС</text><text x="55" y="212" font-size="67" letter-spacing="-3">Нейросети</text><text x="55" y="287" font-size="67" letter-spacing="-3">для проектирования</text><text x="55" y="386" font-size="59" letter-spacing="-2" fill="#a2a6a3">от чата до ассистента.</text><text x="56" y="485" font-size="22">Старт 28 ноября 2026 · 5 недель · Zoom</text><text x="56" y="589" font-size="17" fill="#a2a6a3">5 живых занятий / Проверка ДЗ каждого / До 15 участников</text></g>
+</svg>

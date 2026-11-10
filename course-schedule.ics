@@ -1,0 +1,63 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Evgeniy Kotsur//Course 2026//RU
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Нейросети для проектирования — к
+ урс
+BEGIN:VEVENT
+UID:course-2026-1@evgeniikotsur.ru
+DTSTAMP:20261111T000000Z
+DTSTART:20261128T070000Z
+DTEND:20261128T100000Z
+SUMMARY:Модуль 1 — Задачи для ИИ
+LOCATION:Онлайн в Zoom
+DESCRIPTION:Курс Евгения Коцура. 10:00–13:00 МСК. С
+ сылка на Zoom — в учебной группе.
+URL:https://evgeniikotsur.ru/
+END:VEVENT
+BEGIN:VEVENT
+UID:course-2026-2@evgeniikotsur.ru
+DTSTAMP:20261111T000000Z
+DTSTART:20261205T070000Z
+DTEND:20261205T100000Z
+SUMMARY:Модуль 2 — Запрос и ответ
+LOCATION:Онлайн в Zoom
+DESCRIPTION:Курс Евгения Коцура. 10:00–13:00 МСК. С
+ сылка на Zoom — в учебной группе.
+URL:https://evgeniikotsur.ru/
+END:VEVENT
+BEGIN:VEVENT
+UID:course-2026-3@evgeniikotsur.ru
+DTSTAMP:20261111T000000Z
+DTSTART:20261212T070000Z
+DTEND:20261212T100000Z
+SUMMARY:Модуль 3 — Свой ассистент
+LOCATION:Онлайн в Zoom
+DESCRIPTION:Курс Евгения Коцура. 10:00–13:00 МСК. С
+ сылка на Zoom — в учебной группе.
+URL:https://evgeniikotsur.ru/
+END:VEVENT
+BEGIN:VEVENT
+UID:course-2026-4@evgeniikotsur.ru
+DTSTAMP:20261111T000000Z
+DTSTART:20261219T070000Z
+DTEND:20261219T100000Z
+SUMMARY:Модуль 4 — База знаний
+LOCATION:Онлайн в Zoom
+DESCRIPTION:Курс Евгения Коцура. 10:00–13:00 МСК. С
+ сылка на Zoom — в учебной группе.
+URL:https://evgeniikotsur.ru/
+END:VEVENT
+BEGIN:VEVENT
+UID:course-2026-5@evgeniikotsur.ru
+DTSTAMP:20261111T000000Z
+DTSTART:20261226T070000Z
+DTEND:20261226T100000Z
+SUMMARY:Модуль 5 — Практика проектирования
+LOCATION:Онлайн в Zoom
+DESCRIPTION:Курс Евгения Коцура. 10:00–13:00 МСК. С
+ сылка на Zoom — в учебной группе.
+URL:https://evgeniikotsur.ru/
+END:VEVENT
+END:VCALENDAR

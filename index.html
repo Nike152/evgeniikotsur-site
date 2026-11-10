@@ -1,636 +1,141 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Проект без хаоса — AI-ассистенты для проектирования ПГС</title>
-  <meta name="description" content="12 AI-ассистентов по разделам ПГС. Демо 30 минут → договор → установка на ваш ПК. Данные остаются в контуре заказчика, вы владеете активом. Экономия бюро на 50 инженеров ≈ 27,7 млн ₽/год." />
-  <meta name="theme-color" content="#0A0B14" />
-  <meta property="og:title" content="Проект без хаоса — AI-ассистенты для проектирования ПГС" />
-  <meta property="og:description" content="Демо 30 минут → договор → установка. Экономия бюро на 50 инженеров ≈ 27,7 млн ₽/год. Оплата 50/50." />
-  <meta property="og:type" content="website" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230A0B14'/%3E%3Crect x='9' y='7' width='4' height='18' rx='2' fill='%237C5CFF'/%3E%3Crect x='15' y='12' width='4' height='13' rx='2' fill='%2322D3EE'/%3E%3Crect x='21' y='9' width='4' height='16' rx='2' fill='%237C5CFF'/%3E%3C/svg%3E" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
-  <style>
-    /* ============ Токены ============ */
-    :root {
-      --bg: #0A0B14; --panel: #151833; --panel-2: #1B1F40; --panel-hl: #241C46;
-      --purple: #7C5CFF; --cyan: #22D3EE;
-      --text: #FFFFFF; --body: #C9CCDE; --muted: #8A8FB0;
-      --border: rgba(255,255,255,0.08); --border-strong: rgba(255,255,255,0.14);
-      --radius: 18px; --radius-sm: 12px; --maxw: 1120px;
-      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-      --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, monospace;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-    body { font-family: var(--font); background-color: var(--bg);
-      background-image: radial-gradient(rgba(124,92,255,.06) 1px, transparent 1px), radial-gradient(rgba(34,211,238,.045) 1px, transparent 1px);
-      background-size: 26px 26px, 26px 26px; background-position: 0 0, 13px 13px; background-attachment: fixed;
-      color: var(--body); line-height: 1.6; font-size: 17px; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
-    a { color: inherit; text-decoration: none; }
-    h1,h2,h3 { color: var(--text); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; }
-    h2 { font-size: clamp(28px, 4.2vw, 42px); }
-    h3 { font-size: 20px; font-weight: 600; }
-    .muted { color: var(--muted); }
-    strong { color: var(--text); font-weight: 600; }
-    .container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
-    section { padding: 82px 0; position: relative; }
-    @media (max-width: 640px) { section { padding: 54px 0; } }
-    .eyebrow { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cyan); margin-bottom: 16px; display: inline-block; }
-    .section-lead { max-width: 680px; margin-top: 18px; font-size: 18px; color: var(--muted); }
-
-    /* ============ Кнопки ============ */
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-weight: 600; font-size: 16px; padding: 14px 26px; border-radius: 12px; cursor: pointer; transition: transform .18s ease, box-shadow .18s ease, background .18s ease; border: 1px solid transparent; text-align: center; }
-    .btn-primary { background: linear-gradient(135deg, var(--purple), #6a4bf0); color: #fff; box-shadow: 0 8px 30px rgba(124,92,255,.35); }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(124,92,255,.5); }
-    .btn-ghost { background: rgba(255,255,255,.04); color: var(--text); border: 1px solid var(--border-strong); }
-    .btn-ghost:hover { background: rgba(255,255,255,.08); transform: translateY(-2px); }
-    .btn-lg { padding: 16px 32px; font-size: 17px; }
-    .btn-block { width: 100%; }
-
-    /* ============ Шапка ============ */
-    header { position: sticky; top: 0; z-index: 50; background: rgba(10,11,20,.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid transparent; transition: border-color .3s ease; }
-    header.scrolled { border-bottom: 1px solid var(--border); }
-    .nav { display: flex; align-items: center; justify-content: space-between; height: 68px; }
-    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--text); font-size: 18px; }
-    .logo .mark { width: 26px; height: 26px; border-radius: 7px; flex-shrink: 0; background: linear-gradient(135deg, var(--purple), var(--cyan)); position: relative; }
-    .logo .mark::after { content: ''; position: absolute; inset: 6px 7px; background: repeating-linear-gradient(90deg, rgba(255,255,255,.9) 0 2px, transparent 2px 5px); border-radius: 2px; }
-    header .btn { padding: 10px 20px; font-size: 15px; }
-    @media (max-width: 560px) { .logo span.full { display: none; } header .btn { padding: 9px 15px; font-size: 13px; } }
-
-    /* ============ Hero ============ */
-    .hero { padding-top: 92px; padding-bottom: 88px; text-align: center; overflow: hidden; }
-    .hero-glow { position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(600px 420px at 30% 15%, rgba(124,92,255,.28), transparent 60%), radial-gradient(560px 400px at 78% 30%, rgba(34,211,238,.18), transparent 60%), radial-gradient(700px 500px at 50% 100%, rgba(124,92,255,.10), transparent 65%); }
-    .hero .container { position: relative; z-index: 1; }
-    .hero h1 { font-size: clamp(32px, 5.6vw, 56px); font-weight: 800; max-width: 920px; margin: 0 auto; }
-    .hero h1 .accent { color: var(--purple); display: block; }
-    .hero .sub { font-size: clamp(17px, 2.3vw, 21px); color: var(--body); max-width: 660px; margin: 22px auto 0; }
-    .hero .cta-row { margin-top: 36px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; align-items: center; }
-    .hero .cta-row .link { color: var(--muted); font-size: 15px; } .hero .cta-row .link:hover { color: var(--cyan); }
-    .hero .trust { margin-top: 26px; font-family: var(--mono); font-size: 13px; color: var(--muted); letter-spacing: .04em; }
-    .hero { position: relative; }
-
-    /* ===== AI-chip (кнопка-эмблема) ===== */
-    .ai-chip { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 16px; margin-bottom: 22px; overflow: visible; cursor: pointer; background: linear-gradient(135deg, #7C5CFF, #22D3EE); box-shadow: 0 1px 2px rgba(0,0,0,.35), 0 4px 14px rgba(124,92,255,.4), 0 24px 44px -24px rgba(34,211,238,.6), inset 0 -2px 6px rgba(0,0,0,.28); transition: transform .2s ease; z-index: 2; }
-    .ai-chip:active { transform: scale(.95); }
-    .ai-chip .spark { position: absolute; z-index: 2; top: 9px; left: 9px; width: 18px; height: 18px; color: rgba(255,255,255,.9); transition: all .3s ease; animation: sparkPulse 2.2s ease-in-out infinite; }
-    .ai-chip:hover .spark { width: 34px; height: 34px; top: 13px; left: 13px; color: #fff; }
-    .ai-chip .ai-text { font-size: 26px; font-weight: 800; color: #fff; line-height: 1; transition: opacity .2s ease; }
-    .ai-chip:hover .ai-text { opacity: 0; }
-    @keyframes sparkPulse { 0%,100%{opacity:.65;} 50%{opacity:1;} }
-
-    /* ===== Орб в Hero ===== */
-    .orb-hero { position: absolute; z-index: 0; top: -30px; right: 5%; width: 320px; height: 320px; border-radius: 50%; pointer-events: none; opacity: .6; background: radial-gradient(circle at 40% 34%, rgba(255,255,255,.7), rgba(124,92,255,.5) 22%, rgba(124,92,255,0) 60%), radial-gradient(circle at 66% 70%, rgba(34,211,238,.45), rgba(34,211,238,0) 55%), radial-gradient(circle at 50% 50%, #2a2170, #130f30 72%); box-shadow: 0 0 90px 20px rgba(124,92,255,.4), 0 0 170px 50px rgba(34,211,238,.14); animation: orbBreathe 4s ease-in-out infinite; }
-    .orb-hero::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, transparent, rgba(124,92,255,.35), transparent 40%, rgba(34,211,238,.3), transparent 72%); mix-blend-mode: screen; animation: orbSpin 7s linear infinite; }
-    @keyframes orbBreathe { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
-    @keyframes orbSpin { to { transform: rotate(360deg); } }
-    @media (max-width: 820px) { .orb-hero { width: 200px; height: 200px; right: -20px; top: -10px; opacity: .4; } }
-
-    /* ===== Кнопка btn-reveal ===== */
-    .btn-reveal { position: relative; display: inline-flex; align-items: center; justify-content: center; padding: 16px 32px; border: 2px solid rgba(34,211,238,.75); border-radius: 10px; background: transparent; color: #fff; font-weight: 700; font-size: 16px; cursor: pointer; transition: box-shadow .5s ease, border-color .3s ease; }
-    .btn-reveal span { position: relative; z-index: 2; }
-    .btn-reveal::before, .btn-reveal::after { content: ''; position: absolute; left: 5%; width: 90%; height: 40%; background: var(--bg); z-index: 1; transition: transform .5s ease; transform-origin: center; }
-    .btn-reveal::before { top: -8px; }
-    .btn-reveal::after { top: 78%; }
-    .btn-reveal:hover::before, .btn-reveal:hover::after { transform: scaleX(0); }
-    .btn-reveal:hover { box-shadow: inset 0 0 24px rgba(34,211,238,.5), 0 0 20px rgba(34,211,238,.22); border-color: var(--cyan); }
-    @media (prefers-reduced-motion: reduce) { .orb-hero, .orb-hero::before, .ai-chip .spark { animation: none !important; } }
-
-    .grid { display: grid; gap: 20px; }
-    .card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
-    .checks { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .checks li { position: relative; padding-left: 26px; font-size: 15px; color: var(--body); }
-    .checks li::before { content: ''; position: absolute; left: 0; top: 7px; width: 15px; height: 15px; border-radius: 50%; background: rgba(34,211,238,.15); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322D3EE' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"); background-size: 11px; background-position: center; background-repeat: no-repeat; }
-    .num-badge { width: 40px; height: 40px; border-radius: 11px; background: linear-gradient(135deg, var(--purple), #6a4bf0); color: #fff; font-weight: 700; font-size: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-
-    /* ============ Как это работает ============ */
-    .howto-grid { grid-template-columns: repeat(3, 1fr); margin-top: 40px; }
-    .howto { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; display: flex; flex-direction: column; }
-    .howto .top { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
-    .howto h3 { font-size: 18px; }
-    .howto .dur { font-family: var(--mono); font-size: 12px; color: var(--cyan); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 14px; }
-    .howto p { font-size: 15px; color: var(--body); margin-bottom: 14px; }
-    .howto .sub-h { font-size: 13px; color: var(--muted); font-family: var(--mono); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 10px; }
-    .howto .foot { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--border); font-size: 14px; color: var(--muted); }
-    .howto .foot b { color: var(--cyan); }
-
-    /* ============ Отраслевой контекст ============ */
-    .context-grid { grid-template-columns: repeat(3, 1fr); margin-top: 40px; }
-    .context { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
-    .context .n { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--purple); margin-bottom: 14px; }
-    .context p { font-size: 15px; color: var(--body); }
-    .context p .big { color: var(--cyan); font-weight: 700; }
-
-    /* ============ 12 ассистентов ============ */
-    .assist-grid { grid-template-columns: repeat(4, 1fr); margin-top: 40px; }
-    .assist { position: relative; background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,0) 42%), var(--panel); border: 1px solid rgba(255,255,255,.10); border-radius: var(--radius-sm); padding: 20px; transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
-    .assist:hover { transform: translateY(-4px); border-color: rgba(124,92,255,.5); box-shadow: 0 14px 40px rgba(124,92,255,.25); }
-    .assist.demo { border-color: var(--purple); background: linear-gradient(160deg, rgba(124,92,255,.14), rgba(255,255,255,0) 46%), var(--panel-hl); }
-    .assist .ic { width: 42px; height: 42px; border-radius: 11px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; background: linear-gradient(135deg, rgba(124,92,255,.28), rgba(34,211,238,.2)); border: 1px solid var(--border-strong); }
-    .assist .ic svg { width: 22px; height: 22px; stroke: var(--cyan); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-    .assist .code { font-family: var(--mono); font-size: 12px; color: var(--cyan); }
-    .assist .name { margin-top: 3px; color: var(--text); font-weight: 600; font-size: 15px; }
-    .assist .demo-badge { position: absolute; top: 16px; right: 16px; font-family: var(--mono); font-size: 10px; letter-spacing: .05em; text-transform: uppercase; color: #fff; background: linear-gradient(135deg, var(--purple), var(--cyan)); padding: 3px 8px; border-radius: 12px; z-index: 3; }
-    .assist .tip { position: absolute; left: 50%; bottom: calc(100% + 10px); transform: translateX(-50%) translateY(6px); width: max-content; max-width: 240px; background: var(--panel-2); border: 1px solid var(--border-strong); border-radius: 10px; padding: 12px 14px; font-size: 13px; line-height: 1.5; color: var(--body); box-shadow: 0 14px 34px rgba(0,0,0,.55); opacity: 0; pointer-events: none; transition: opacity .22s ease, transform .22s ease; z-index: 40; }
-    .assist .tip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--panel-2); }
-    .assist:hover .tip { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* ============ Три отличия ============ */
-    .why-grid { grid-template-columns: repeat(3, 1fr); margin-top: 40px; }
-    .why .ic { width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, rgba(124,92,255,.25), rgba(34,211,238,.18)); border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
-    .why .ic svg { width: 23px; height: 23px; stroke: var(--cyan); }
-    .why h3 { margin-bottom: 10px; font-size: 18px; }
-    .why p { font-size: 15px; color: var(--body); }
-
-    /* ============ Экономика ============ */
-    .econ-panel { background: linear-gradient(135deg, var(--panel-2), var(--panel)); border: 1px solid var(--border); border-radius: var(--radius); padding: 44px; margin-top: 36px; }
-    .econ-hero { font-size: clamp(38px, 6.5vw, 72px); font-weight: 800; color: var(--purple); letter-spacing: -0.03em; line-height: 1.02; }
-    .econ-formula { margin-top: 16px; font-family: var(--mono); font-size: 15px; color: var(--body); }
-    .econ-note { margin-top: 12px; font-size: 13px; color: var(--muted); max-width: 620px; }
-    .econ-box { margin-top: 30px; background: rgba(0,0,0,.18); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 26px; }
-    .econ-box .row { display: flex; justify-content: space-between; gap: 14px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 16px; }
-    .econ-box .row:last-child { border-bottom: none; }
-    .econ-box .row .k { color: var(--body); } .econ-box .row .v { color: var(--text); font-weight: 700; white-space: nowrap; }
-    .econ-box .row .v.good { color: var(--cyan); }
-    .prop-track { display: flex; height: 46px; border-radius: 11px; overflow: hidden; border: 1px solid var(--border-strong); margin-top: 22px; }
-    .prop-invest { width: 6%; background: linear-gradient(135deg, var(--purple), #6a4bf0); min-width: 58px; }
-    .prop-save { width: 94%; background: rgba(34,211,238,.14); display: flex; align-items: center; padding-left: 16px; }
-    .prop-save span { font-family: var(--mono); font-size: 13px; color: var(--cyan); font-weight: 600; }
-    .prop-legend { display: flex; gap: 24px; margin-top: 14px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
-    .prop-legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 8px; vertical-align: middle; }
-
-    /* ============ Пакеты ============ */
-    .pkg-grid { grid-template-columns: repeat(3, 1fr); margin-top: 44px; align-items: stretch; }
-    .pkg { position: relative; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px; display: flex; flex-direction: column; }
-    .pkg.featured { background: var(--panel-hl); border: 1px solid var(--purple); box-shadow: 0 20px 60px rgba(124,92,255,.22); }
-    .pkg .badge { position: absolute; top: -13px; left: 30px; background: linear-gradient(135deg, var(--purple), var(--cyan)); color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .04em; padding: 5px 14px; border-radius: 20px; text-transform: uppercase; }
-    .pkg .pkg-name { color: var(--text); font-size: 22px; font-weight: 700; }
-    .pkg .pkg-for { color: var(--muted); font-size: 14px; margin-top: 4px; }
-    .pkg .checks { margin: 22px 0; }
-    .pkg .price { padding-top: 20px; border-top: 1px solid var(--border); }
-    .pkg .price .from { font-size: 13px; color: var(--muted); }
-    .pkg .price .val { font-size: 30px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; display: block; margin-top: 2px; }
-    .pkg .price .old { font-size: 17px; color: var(--muted); text-decoration: line-through; margin-right: 8px; }
-    .pkg .price .val.discount { color: var(--cyan); }
-    .pkg .firstclient { margin: 12px 0 0; padding: 12px 14px; background: rgba(124,92,255,.1); border: 1px solid rgba(124,92,255,.3); border-radius: 10px; font-size: 13px; color: var(--body); }
-    .pkg .firstclient b { color: var(--text); }
-    .pkg .metrics { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
-    .pkg .metrics .m { display: flex; justify-content: space-between; font-size: 14px; }
-    .pkg .metrics .m .mk { color: var(--muted); } .pkg .metrics .m .mv { color: var(--text); font-weight: 600; }
-    .pkg .terms { margin-top: 14px; font-size: 12px; color: var(--muted); font-family: var(--mono); }
-    .pkg .btn { margin-top: 22px; }
-
-    /* ============ Демо: 2 колонки ============ */
-    .two-grid { grid-template-columns: repeat(2, 1fr); margin-top: 40px; }
-    .two-grid .card { height: 100%; }
-    .card h3 { margin-bottom: 14px; }
-    .card .lead-sm { font-size: 15px; color: var(--muted); margin-bottom: 16px; }
-    .card .disc { margin-top: 16px; font-size: 13px; color: var(--muted); border-left: 2px solid var(--purple); padding-left: 14px; }
-
-    /* ============ Таймлайн (после встречи) ============ */
-    .timeline-grid { grid-template-columns: repeat(4, 1fr); margin-top: 40px; }
-    .tl { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 24px; }
-    .tl .tln { font-family: var(--mono); font-size: 12px; color: var(--cyan); text-transform: uppercase; letter-spacing: .04em; }
-    .tl h3 { font-size: 17px; margin: 10px 0 8px; }
-    .tl ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-    .tl li { font-size: 14px; color: var(--body); padding-left: 14px; position: relative; }
-    .tl li::before { content: '·'; position: absolute; left: 2px; color: var(--purple); }
-    .risk-note { margin-top: 26px; padding: 18px 22px; border-left: 2px solid var(--cyan); background: rgba(34,211,238,.06); border-radius: 0 12px 12px 0; font-size: 15px; color: var(--body); }
-
-    /* ============ Команда ============ */
-    .team-panel { background: linear-gradient(135deg, var(--panel-2), var(--panel)); border: 1px solid var(--border); border-radius: var(--radius); padding: 48px; margin-top: 36px; }
-    .team-lead { font-size: clamp(20px, 3vw, 28px); font-weight: 700; color: var(--text); max-width: 780px; letter-spacing: -0.01em; }
-    .team-panel p.body { margin-top: 20px; font-size: 16px; color: var(--body); max-width: 760px; }
-    .team-panel p.body + p.body { margin-top: 14px; }
-    .team-contacts { margin-top: 26px; font-family: var(--mono); font-size: 15px; color: var(--cyan); display: flex; gap: 8px 24px; flex-wrap: wrap; }
-
-    /* ============ Финальный CTA ============ */
-    .final-panel { position: relative; overflow: hidden; background: var(--panel-2); border: 1px solid var(--border-strong); border-radius: 26px; padding: 56px 48px; }
-    .final-glow { position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(500px 320px at 15% 0%, rgba(124,92,255,.30), transparent 60%), radial-gradient(500px 320px at 90% 110%, rgba(34,211,238,.20), transparent 60%); }
-    .final-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 44px; align-items: center; }
-    .final h2 { font-size: clamp(28px, 4.4vw, 44px); }
-    .final .sub { margin-top: 16px; color: var(--body); font-size: 18px; max-width: 460px; }
-    .final .cta-box { display: flex; flex-direction: column; gap: 16px; }
-    .final .tg-link { color: var(--cyan); font-size: 15px; font-weight: 500; }
-    .final .tg-link:hover { text-decoration: underline; }
-    .final .contacts { margin-top: 6px; font-size: 14px; color: var(--muted); line-height: 1.9; }
-    .final .contacts b { color: var(--body); }
-    .final .contacts a:hover { color: var(--cyan); }
-
-    footer { border-top: 1px solid var(--border); padding: 34px 0; }
-    .foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
-
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
-    .reveal.in { opacity: 1; transform: none; }
-    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .reveal { opacity: 1; transform: none; transition: none; } .btn:hover, .assist:hover { transform: none; } }
-
-    /* ============ Адаптив ============ */
-    @media (max-width: 960px) {
-      .assist-grid { grid-template-columns: repeat(3, 1fr); }
-      .timeline-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 820px) {
-      .howto-grid, .context-grid, .why-grid, .pkg-grid, .two-grid { grid-template-columns: 1fr; }
-      .pkg.featured { order: -1; }
-      .final-inner { grid-template-columns: 1fr; gap: 28px; }
-      .econ-panel, .team-panel { padding: 30px; }
-      .final-panel { padding: 40px 24px; }
-    }
-    @media (max-width: 560px) {
-      .assist-grid { grid-template-columns: repeat(2, 1fr); }
-      .timeline-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Нейросети для проектирования: от чата до ассистента — курс Евгения Коцура</title>
+  <meta name="description" content="Практический онлайн-курс для проектировщиков. 5 недель, 15 часов в Zoom, проверка каждой домашней работы. Старт 28 ноября 2026. Первые 5 оплаченных мест — 19 900 ₽, затем 24 900 ₽.">
+  <meta name="theme-color" content="#090a0a">
+  <meta name="color-scheme" content="dark">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+  <link rel="canonical" href="https://evgeniikotsur.ru/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="Нейросети для проектирования: от чата до ассистента">
+  <meta property="og:description" content="5 недель практики с Евгением Коцуром. Старт 28 ноября 2026. Открытая встреча — 21 ноября в 10:00 МСК, бесплатно.">
+  <meta property="og:url" content="https://evgeniikotsur.ru/">
+  <meta property="og:image" content="https://evgeniikotsur.ru/images/course-social.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Нейросети для проектирования. От чата до ассистента. Старт 28 ноября 2026.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="images/course-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
 </head>
 <body>
-
-  <!-- ===== ШАПКА ===== -->
-  <header id="site-header">
-    <div class="container nav">
-      <a href="#top" class="logo"><span class="mark"></span><span class="full">Проект без хаоса</span></a>
-      <a class="btn btn-primary" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener">Запросить демо-встречу</a>
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="К началу страницы">
+        <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M4 26V6h10M4 16h15V6h9M19 16v10h9M14 6v20" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span>Евгений Коцур<span class="brand-sub">Практика проектирования с ИИ</span></span>
+      </a>
+      <nav class="desktop-nav" aria-label="Основная навигация"><a href="#program">Программа</a><a href="#format">Как учимся</a><a href="#enroll">Стоимость</a></nav>
+      <a class="header-cta" href="#enroll">Записаться <span aria-hidden="true">↗</span></a>
     </div>
   </header>
-  <span id="top"></span>
-
-  <!-- ===== HERO ===== -->
-  <section class="hero">
-    <div class="hero-glow"></div>
-    <div class="orb-hero"></div>
-    <div class="container">
-      <a class="ai-chip" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener" aria-label="Запросить демо в Telegram">
-        <svg class="spark" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813A3.75 3.75 0 007.466 7.89l.813-2.846A.75.75 0 019 4.5zM18 1.5a.75.75 0 01.728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 010 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 01-1.456 0l-.258-1.036a2.625 2.625 0 00-1.91-1.91l-1.036-.258a.75.75 0 010-1.456l1.036-.258a2.625 2.625 0 001.91-1.91l.258-1.036A.75.75 0 0118 1.5zM16.5 15a.75.75 0 01.712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 010 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 01-1.422 0l-.395-1.183a1.5 1.5 0 00-.948-.948l-1.183-.395a.75.75 0 010-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0116.5 15z"></path></svg>
-        <span class="ai-text">AI</span>
-      </a>
-      <br />
-      <span class="eyebrow">AI для проектных организаций</span>
-      <h1>AI-ассистенты для проектирования ПГС<span class="accent">Главный конструктор теперь у вас в команде</span></h1>
-      <p class="sub">12 специализированных помощников по разделам ПГС. Один из них (КР) — сейчас в деле. Запросите демо.</p>
-      <div class="cta-row">
-        <a class="btn-reveal" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener"><span>Запросить 30-минутное демо</span></a>
-        <a class="link" href="#cta">или свяжитесь с нами</a>
+  <main id="main">
+    <section class="hero container" id="top" aria-labelledby="hero-title">
+      <div class="hero-overline"><span class="eyebrow">Практический курс для проектировщиков</span><span class="edition">Поток / ноябрь 2026</span></div>
+      <div class="hero-layout">
+        <div class="hero-copy">
+          <h1 id="hero-title">Нейросети<br>для проектирования<span class="hero-subtitle">от чата<br>до ассистента<span class="small-period">.</span></span></h1>
+          <p class="hero-description">Ваши чертежи, документы и задачи — основа практики. Учимся ставить задачи ИИ, проверять ответы и собирать своего рабочего ассистента.</p>
+          <div class="hero-actions"><a class="button button-light" href="#enroll">Записаться на курс <span aria-hidden="true">↗</span></a><a class="text-link" href="#program">Посмотреть программу <span aria-hidden="true">↓</span></a></div>
+          <p class="hero-date"><time datetime="2026-11-28T10:00:00+03:00">Старт 28 ноября</time><span>Субботы, 10:00–13:00 МСК · Zoom</span></p>
+        </div>
+        <figure class="hero-visual">
+          <div class="figure-top"><span>От исходного листа</span><span>к проверенному решению</span></div>
+          <img src="images/course-drawing.svg" alt="Авторская учебная схема: аксонометрия здания, план этажа, размеры и выделенный узел для проверки" width="720" height="800" fetchpriority="high">
+          <figcaption><span class="cross" aria-hidden="true">+</span><span>Чертёж → вопрос → источник → проверка</span><span class="figure-index">01 / 05</span></figcaption>
+        </figure>
       </div>
-      <p class="trust">Демо бесплатно · Оплата 50/50 · Данные в контуре заказчика</p>
-    </div>
-  </section>
-
-  <!-- ===== КАК ЭТО РАБОТАЕТ ===== -->
-  <section id="how">
-    <div class="container">
-      <span class="eyebrow reveal">Как это работает</span>
-      <h2 class="reveal">Три шага от идеи до результата</h2>
-      <div class="grid howto-grid">
-        <div class="howto reveal">
-          <div class="top"><span class="num-badge">1</span><h3>Демо-встреча</h3></div>
-          <div class="dur">30 минут</div>
-          <p>Видеозвонок или очно. Евгений показывает ассистента КР на вашем примере (или типовом).</p>
-          <div class="sub-h">Вы видите</div>
-          <ul class="checks">
-            <li>Как ассистент работает</li>
-            <li>Расчёт экономии для вашего объёма</li>
-            <li>Ответы на вопросы</li>
-          </ul>
-          <div class="foot"><b>Стоимость: бесплатно.</b> Без обязательств.</div>
-        </div>
-        <div class="howto reveal">
-          <div class="top"><span class="num-badge">2</span><h3>Договор и оплата 50%</h3></div>
-          <div class="dur">Если результаты понравились</div>
-          <p>Переходим к сотрудничеству по прозрачным условиям:</p>
-          <ul class="checks">
-            <li>Подписываете лицензионный договор</li>
-            <li>Платите первую половину</li>
-            <li>Обсуждаем сроки установки</li>
-          </ul>
-          <div class="foot">IP защищена (договор + NDA). Обязательства и сроки — с обеих сторон.</div>
-        </div>
-        <div class="howto reveal">
-          <div class="top"><span class="num-badge">3</span><h3>Установка, обучение, оплата 50%</h3></div>
-          <div class="dur">2–4 недели</div>
-          <p>Устанавливаем ассистентов на ваш ПК:</p>
-          <ul class="checks">
-            <li>Все 12 ассистентов (или выбранные)</li>
-            <li>Настройка на 10–50 рабочих мест</li>
-            <li>Обучение вашей команды</li>
-            <li>Первые недели: поддержка и доработки</li>
-          </ul>
-          <div class="foot">Вторая половина — когда установка завершена, команда обучена и ассистенты работают в боевом режиме.</div>
-        </div>
+      <dl class="hero-facts"><div><dt>5</dt><dd>недель практики</dd></div><div><dt>15</dt><dd>часов живых занятий</dd></div><div><dt>15</dt><dd>участников в группе</dd></div><div class="fact-text"><dt>Ваши задачи.</dt><dd>Личная проверка домашних работ.</dd></div></dl>
+    </section>
+    <section class="open-meeting container" aria-labelledby="open-title">
+      <div class="meeting-date"><span class="eyebrow">Открытая встреча</span><time datetime="2026-11-21T10:00:00+03:00">21.11 <span>/ 10:00 МСК</span></time></div>
+      <div class="meeting-copy"><h2 id="open-title">Познакомимся до старта.</h2><p>Обсудим курс, ваши задачи и формат работы. Участие бесплатное.</p></div>
+      <a class="text-link" href="#enroll" data-interest="meeting">Записаться на встречу <span aria-hidden="true">↗</span></a>
+    </section>
+    <section class="section container" aria-labelledby="tasks-title">
+      <div class="section-heading"><p class="eyebrow">01 / Зачем этот курс</p><h2 id="tasks-title">Знакомая работа.<br><span class="muted">Новый инструмент.</span></h2><p class="section-intro">Для проектировщиков, которые хотят встроить ИИ в повседневную работу и понимать, где его ответу можно доверять.</p></div>
+      <div class="task-list">
+        <article><span class="row-index">01</span><h3>Чертежи и замечания</h3><p>Подготовить лист к чтению, сформулировать проверку, собрать замечания и сверить их с исходником.</p><span class="task-tag">АР / КЖ / инженерные разделы</span></article>
+        <article><span class="row-index">02</span><h3>Документы и основания</h3><p>Найти нужное в комплекте документов, получить ответ со ссылкой на источник и проверить, что он действительно там есть.</p><span class="task-tag">Текст / нормы / база знаний</span></article>
+        <article><span class="row-index">03</span><h3>Повторяющиеся задачи</h3><p>Сохранить рабочую инструкцию, материалы и критерии проверки в ассистенте, к которому можно вернуться с новой задачей.</p><span class="task-tag">Инструкция / контекст / результат</span></article>
       </div>
-    </div>
-  </section>
-
-  <!-- ===== ОТРАСЛЕВОЙ КОНТЕКСТ ===== -->
-  <section id="context">
-    <div class="container">
-      <span class="eyebrow reveal">Почему это актуально</span>
-      <h2 class="reveal">Реальная боль проектных организаций</h2>
-      <div class="grid context-grid">
-        <div class="context reveal">
-          <div class="n">01</div>
-          <p>Проектные организации тратят <strong>30–40% рабочего дня инженеров</strong> на ручную рутину: ввод данных, проверку по СП и ГОСТ, поиск решений в нормативных документах, согласование с соседними разделами.</p>
-        </div>
-        <div class="context reveal">
-          <div class="n">02</div>
-          <p>На базе знаний (СП, ГОСТ, ПП 87, реестры замечаний, типовые альбомы) можно построить ассистента, который подскажет проверенное решение <strong>за секунды</strong>.</p>
-        </div>
-        <div class="context reveal">
-          <div class="n">03</div>
-          <p>50 инженеров, теряющих по 1,5 часа в день на рутину, — это <span class="big">≈ 2,3 млн ₽ в месяц</span>. За год без этих потерь — <span class="big">27,7 млн ₽</span>.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== 12 АССИСТЕНТОВ ===== -->
-  <section id="assistants">
-    <div class="container">
-      <span class="eyebrow reveal">Линейка</span>
-      <h2 class="reveal">12 ассистентов под разделы ПГС</h2>
-      <p class="section-lead reveal">Отдельный ассистент на каждую специализацию. Ассистент КР (главный конструктор) — уже готов и показывается на демо.</p>
-      <div class="grid assist-grid">
-        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-6h6v6"/></svg></div><span class="code">АР</span><div class="name">Архитектурные решения</div><div class="tip">Проверка ТЗ и решений на соответствие нормам, координация смежных разделов, оформление пояснительных записок, ТЭП и спецификаций.</div></div>
-        <div class="assist demo reveal"><span class="demo-badge">В демо</span><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 7h18M3 17h18M7 7v10M17 7v10M3 7v10M21 7v10"/></svg></div><span class="code">КР</span><div class="name">Конструктивные решения</div><div class="tip">Подбор узлов и типовых решений, проверка спецификаций арматуры и металла, расчётные пояснительные записки.</div></div>
-        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5zM3 7l9 5 9-5M12 12v10"/></svg></div><span class="code">BIM</span><div class="name">BIM-координация</div><div class="tip">Проверка коллизий, контроль атрибутов и стандартов модели, сборка сводной модели и выгрузка ведомостей.</div></div>
-        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2s4 3 4 7c0 1.5-1 3-1 3s0-2-2-2c0 3-2 3-2 5a3 3 0 0 0 6 0c0-4-5-6-3-16z"/></svg></div><span class="code">ПБ</span><div class="name">Пожарная безопасность</div><div class="tip">Категорирование помещений, расчёты пожарного риска, проверка соответствия СП — раздел МОПБ и спецификации систем противопожарной защиты.</div></div>
-        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 5h18v16H3zM3 10h18M8 3v4M16 3v4"/></svg></div><span class="code">ПОС</span><div class="name">Организация строительства</div><div class="tip">Календарные планы, стройгенпланы, потребность в ресурсах и оформление пояснительной записки по составу ПОС.</div></div>
-        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 8a4 4 0 100 8 4 4 0 000-8z"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></div><span class="code">ТХ</span><div class="name">Технология строительства</div><div class="tip">Описание технологических процессов, подбор оборудования, перечни и спецификации, увязка с разделами АСУТП и ЭМ.</div></div>
-        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M5 5h14v14H5zM9 9h6v6H9zM9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg></div><span class="code">АСУТП</span><div class="name">Автоматизация ТП</div><div class="tip">Перечни сигналов и контуров регулирования, функциональные схемы автоматизации, спецификации КИПиА.</div></div>
-        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></div><span class="code">ЭМ</span><div class="name">Электроснабжение</div><div class="tip">Подбор кабельной продукции, расчёт сечений, кабельные журналы и схемы питания.</div></div>
-        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3s6 6 6 10a6 6 0 0 1-12 0c0-4 6-10 6-10z"/></svg></div><span class="code">ВК</span><div class="name">Водоснабжение и канализация</div><div class="tip">Расчёты по СП, спецификации трубопроводов и арматуры, проверка стыков с разделами ОВ и ЭМ.</div></div>
-        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 8h12a3 3 0 1 0-3-3M3 12h17M3 16h10a3 3 0 1 1-3 3"/></svg></div><span class="code">ОВ</span><div class="name">Отопление и вентиляция</div><div class="tip">Подбор оборудования по техническим требованиям, ведомости систем, сборка тома по шаблону.</div></div>
-        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 10-5-10-5zM2 13l10 5 10-5M2 18l10 4 10-4"/></svg></div><span class="code">ГТ</span><div class="name">Геотехнические решения</div><div class="tip">Обработка данных инженерной геологии, характеристики грунтов и оснований, увязка с разделом КР, оформление отчёта.</div></div>
-        <div class="assist reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M2 8.5a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0M12 19h.01"/></svg></div><span class="code">СС</span><div class="name">Слаботочные сети</div><div class="tip">Структурированные кабельные сети, видеонаблюдение, СКУД, пожарная сигнализация — подбор оборудования и спецификаций.</div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== ТРИ ОТЛИЧИЯ ===== -->
-  <section id="why">
-    <div class="container">
-      <span class="eyebrow reveal">Почему это другое</span>
-      <h2 class="reveal">Три принципиальных отличия</h2>
-      <div class="grid why-grid">
-        <div class="card why reveal">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-          <h3>Данные остаются в контуре</h3>
-          <p>После установки ассистенты работают на вашем ПК. Рабочие файлы не уходят вовне.</p>
-        </div>
-        <div class="card why reveal">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg></div>
-          <h3>Вы владеете активом</h3>
-          <p>После оплаты — ваши: промпты, база знаний, методология. Без ежемесячных лицензий. Мы обновляем базу раз в квартал, чтобы она не устаревала.</p>
-        </div>
-        <div class="card why reveal">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
-          <h3>Быстрое внедрение</h3>
-          <p>Демо на встречу, договор за день, установка 2–4 недели. Не 6 месяцев согласований, как обычные IT-проекты.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== ЭКОНОМИКА ===== -->
-  <section id="economics">
-    <div class="container">
-      <span class="eyebrow reveal">Экономика</span>
-      <h2 class="reveal">Что это даёт вашей организации</h2>
-      <p class="section-lead reveal">Расчёт для организации на 50 инженеров.</p>
-      <div class="econ-panel reveal">
-        <div class="econ-hero">≈ 2,3 млн ₽ в месяц экономии</div>
-        <div class="econ-formula">50 инженеров × 1,5 ч/день × 22 рабочих дня × 1 400 ₽/ч</div>
-        <p class="econ-note">Это консервативная оценка. На разделах ОВ, ПБ, ЭМ часто 2–3 ч/день; на КР, АР — 1–1,5 ч/день. Точный расчёт для вашей организации обсудим на демо.</p>
-        <div class="econ-box">
-          <div class="row"><span class="k">Экономия клиента за год</span><span class="v good">≈ 27,7 млн ₽</span></div>
-          <div class="row"><span class="k">Ваша инвестиция (пакет)</span><span class="v">≈ 975 тыс – 2,3 млн ₽</span></div>
-          <div class="row"><span class="k">Доля инвестиции от создаваемой ценности</span><span class="v">3,5–8%</span></div>
-          <div class="row"><span class="k">Окупаемость</span><span class="v good">≈ 10–30 дней</span></div>
-        </div>
-        <div class="prop-track">
-          <div class="prop-invest"></div>
-          <div class="prop-save"><span>92–96,5% ценности остаются у вас</span></div>
-        </div>
-        <div class="prop-legend">
-          <div><span class="dot" style="background:var(--purple)"></span>Инвестиция ≈ 3,5–8% от создаваемой ценности</div>
-          <div><span class="dot" style="background:rgba(34,211,238,.4)"></span>Остаток года — чистая прибыль</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== ПАКЕТЫ ===== -->
-  <section id="packages">
-    <div class="container">
-      <span class="eyebrow reveal">Пакеты</span>
-      <h2 class="reveal">Три варианта для разных размеров</h2>
-      <div class="grid pkg-grid">
-        <!-- Старт -->
-        <div class="pkg reveal">
-          <div class="pkg-name">Старт</div>
-          <div class="pkg-for">Для малых бюро · 10–30 чел</div>
-          <ul class="checks">
-            <li>3 ассистента (выбираете)</li>
-            <li>Установка на 10 рабочих мест</li>
-            <li>Обучение 5–10 человек</li>
-            <li>Разовое обновление базы</li>
-          </ul>
-          <div class="price"><span class="from">Инвестиция</span><span class="val">235 000 ₽</span></div>
-          <div class="metrics">
-            <div class="m"><span class="mk">Экономия / год</span><span class="mv">≈ 8–12 млн ₽</span></div>
-            <div class="m"><span class="mk">Окупаемость</span><span class="mv">≈ 3–4 недели</span></div>
-          </div>
-          <div class="terms">50% сейчас · 50% после установки и обучения</div>
-          <a class="btn btn-ghost btn-block" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener">Узнать больше</a>
-        </div>
-        <!-- Практика -->
-        <div class="pkg featured reveal">
-          <div class="badge">Рекомендуем</div>
-          <div class="pkg-name">Практика</div>
-          <div class="pkg-for">Для среднего ПИ · 50–150 чел</div>
-          <ul class="checks">
-            <li>10 ассистентов</li>
-            <li>Установка на 30 рабочих мест</li>
-            <li>Обучение 10–15 человек</li>
-            <li>Квартальные обновления (1 год)</li>
-          </ul>
-          <div class="price"><span class="from">Базовая инвестиция</span><span class="val"><span class="old">975 000 ₽</span></span><span class="val discount">780 000 ₽</span></div>
-          <div class="firstclient"><b>Для первого клиента — скидка 20%.</b> Условие: результаты становятся кейсом в нашем портфолио (без публикации имени, только цифры).</div>
-          <div class="metrics">
-            <div class="m"><span class="mk">Экономия / год</span><span class="mv">≈ 27,7 млн ₽</span></div>
-            <div class="m"><span class="mk">Окупаемость</span><span class="mv">≈ 10 дней</span></div>
-          </div>
-          <div class="terms">50% сейчас · 50% после установки и обучения</div>
-          <a class="btn btn-primary btn-block" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener">Запросить демо со скидкой 20%</a>
-        </div>
-        <!-- Корпоратив -->
-        <div class="pkg reveal">
-          <div class="pkg-name">Корпоратив</div>
-          <div class="pkg-for">Для крупной ПО · 200+ чел</div>
-          <ul class="checks">
-            <li>Все 12 ассистентов</li>
-            <li>Кастомизация под процессы</li>
-            <li>Установка на 50+ рабочих мест</li>
-            <li>Обучение 3 потока (45–60 чел)</li>
-            <li>Квартальные обновления (1 год)</li>
-          </ul>
-          <div class="price"><span class="from">Инвестиция</span><span class="val">2 300 000 ₽</span></div>
-          <div class="metrics">
-            <div class="m"><span class="mk">Экономия / год</span><span class="mv">≈ 110+ млн ₽</span></div>
-            <div class="m"><span class="mk">Окупаемость</span><span class="mv">≈ 7–10 дней</span></div>
-          </div>
-          <div class="terms">50% сейчас · 50% после установки и обучения</div>
-          <a class="btn btn-ghost btn-block" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener">Договориться о встрече</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== ДЕМО: ЧТО ПРОИСХОДИТ ===== -->
-  <section id="demo">
-    <div class="container">
-      <span class="eyebrow reveal">Демо-встреча</span>
-      <h2 class="reveal">Что вы увидите на демо</h2>
-      <div class="grid two-grid">
-        <div class="card reveal">
-          <h3>Ассистент КР в работе</h3>
-          <p class="lead-sm">Евгений показывает ассистента КР (главный конструктор) на реальном примере или вашем проекте.</p>
-          <ul class="checks">
-            <li>Проверить конструктивную схему по СП 63 (железобетон)</li>
-            <li>Подсказать решение фундамента по грунтовым условиям (СП 22, 24)</li>
-            <li>Проверить армирование по нормам</li>
-            <li>Найти коллизии с соседними разделами</li>
-          </ul>
-        </div>
-        <div class="card reveal">
-          <h3>Ваши цифры</h3>
-          <p class="lead-sm">Во время встречи обсудим конкретику вашей организации:</p>
-          <ul class="checks">
-            <li>Сколько часов в день теряет ваша команда</li>
-            <li>Какие разделы приоритетны (ОВ, КР, ПБ?)</li>
-            <li>Расчёт вашей конкретной экономии</li>
-            <li>Какие пакеты подходят вашему размеру</li>
-            <li>Сроки и условия установки</li>
-          </ul>
-          <p class="disc">Никаких обязательств. Просто данные для решения.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== ПОСЛЕ ВСТРЕЧИ ===== -->
-  <section id="after">
-    <div class="container">
-      <span class="eyebrow reveal">После встречи</span>
-      <h2 class="reveal">Если результаты понравились</h2>
-      <div class="grid timeline-grid">
-        <div class="tl reveal">
-          <div class="tln">День 1–2</div>
-          <h3>Отправляем КП</h3>
-          <ul>
-            <li>Расчёт экономики вашей организации</li>
-            <li>Выбранный пакет и цены</li>
-            <li>Договор, готовый к подписанию</li>
-            <li>Сроки и этапы</li>
-          </ul>
-        </div>
-        <div class="tl reveal">
-          <div class="tln">День 3–5</div>
-          <h3>Согласование и подписание</h3>
-          <ul>
-            <li>Вопросы по договору решаем быстро</li>
-            <li>Оплата первой половины</li>
-          </ul>
-        </div>
-        <div class="tl reveal">
-          <div class="tln">После оплаты</div>
-          <h3>Установка</h3>
-          <ul>
-            <li>Согласуем удобный день</li>
-            <li>2–4 недели: установка и обучение</li>
-            <li>Поддержка в боевом режиме</li>
-          </ul>
-        </div>
-        <div class="tl reveal">
-          <div class="tln">После внедрения</div>
-          <h3>Оплата 50%</h3>
-          <ul>
-            <li>Установка завершена</li>
-            <li>Команда обучена и работает</li>
-            <li>Платите вторую половину</li>
-          </ul>
-        </div>
-      </div>
-      <p class="risk-note reveal"><strong>Риск минимален:</strong> у вас есть демо, вы видите результат, подписываете договор. До договора ничего не устанавливаем.</p>
-    </div>
-  </section>
-
-  <!-- ===== КОМАНДА ===== -->
-  <section id="team">
-    <div class="container">
-      <span class="eyebrow reveal">Кто это делает</span>
-      <div class="team-panel reveal">
-        <p class="team-lead">Мы не AI-компания, обслуживающая отрасль. Мы проектировщики, встроившие AI в свою практику.</p>
-        <p class="body">20 лет в ПГС — это не слоган, это база знаний. Каждый ассистент — результат анализа реальных проблем и ошибок на наших проектах.</p>
-        <p class="body">Структурированная база знаний (СП, ГОСТ, ПП 87, реестры замечаний, типовые решения) — не украдена, не скачана из интернета. Это наша работа.</p>
-        <p class="body">По любым техническим вопросам или сомнениям — напишите или позвоните. Ответим честно.</p>
-        <div class="team-contacts">
-          <a href="tel:+79507726411">+7 950 772-64-11</a>
-          <a href="mailto:ask.kozurev@gmail.com">ask.kozurev@gmail.com</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== ФИНАЛЬНЫЙ CTA ===== -->
-  <section id="cta">
-    <div class="container">
-      <div class="final-panel reveal">
-        <div class="final-glow"></div>
-        <div class="final-inner final">
-          <div>
-            <h2>Давайте проверим на вашем примере</h2>
-            <p class="sub">Демо 30 минут. Никаких обязательств. Либо видите результат и идёте дальше, либо спасибо за время.</p>
-          </div>
-          <div class="cta-box">
-            <a class="btn btn-primary btn-lg btn-block" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener">Запросить демо со скидкой 20%</a>
-            <a class="tg-link" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener">Или напишите в Telegram: @EvgeniyKotzur</a>
-            <div class="contacts">
-              <b>Евгений Коцур</b><br />
-              <a href="tel:+79507726411">+7 950 772-64-11</a><br />
-              <a href="mailto:ask.kozurev@gmail.com">ask.kozurev@gmail.com</a><br />
-              Telegram: <a href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener">@EvgeniyKotzur</a><br />
-              Пн–Пт 10–18 МСК
+      <p class="section-note">Начать можно с опыта обычного чата. Программировать для прохождения курса не требуется.</p>
+    </section>
+    <section class="practice-section section" id="practice" aria-labelledby="practice-title">
+      <div class="container">
+        <div class="section-heading"><p class="eyebrow">02 / Логика работы</p><h2 id="practice-title">ИИ предлагает.<br><span class="muted">Инженер проверяет.</span></h2><p class="section-intro">Разберём на небольшом учебном примере. Важно пройти весь путь: от исходного листа до основания замечания.</p></div>
+        <div class="practice-layout">
+          <figure class="practice-drawing"><div class="drawing-label"><span>Учебный фрагмент</span><span>Не рабочая документация</span></div><img src="images/course-detail.svg" alt="Два разных учебных узла с одинаковой маркой У-2. Повторяющиеся марки выделены для проверки по полному комплекту" width="680" height="470" loading="lazy"><figcaption>Одинаковая марка — повод проверить комплект, а не готовый вывод об ошибке.</figcaption></figure>
+          <div class="practice-workflow" data-workflow>
+            <div class="workflow-nav" aria-label="Этапы разбора"><button type="button" data-step="0" aria-pressed="true">01 / Лист</button><button type="button" data-step="1" aria-pressed="false">02 / Запрос</button><button type="button" data-step="2" aria-pressed="false">03 / Проверка</button></div>
+            <div class="workflow-panels" aria-live="polite" aria-atomic="true">
+              <article data-panel="0"><p class="eyebrow">Исходные данные</p><h3>Сначала читаем лист.</h3><p>На фрагменте показаны две разные детали с маркой «У-2». Подготовим изображение так, чтобы марки и подписи читались.</p><p class="workflow-foot">Граница задачи: только видимый фрагмент. Остальной комплект пока неизвестен.</p></article>
+              <article data-panel="1"><p class="eyebrow">Постановка задачи</p><h3>Спрашиваем конкретно.</h3><blockquote>«Составь список марок узлов на фрагменте. Покажи повторяющиеся обозначения. Для каждого укажи место на листе. Не делай выводов по отсутствующим данным».</blockquote><p class="workflow-foot">Формат ответа задан заранее: марка → расположение → что нужно уточнить.</p></article>
+              <article data-panel="2"><p class="eyebrow">Проверка результата</p><h3>Возвращаемся к исходнику.</h3><p>Сверяем обе марки с изображением и проверяем их по полному комплекту. До этой сверки одинаковое обозначение остаётся кандидатом на проверку.</p><p class="workflow-foot"><span class="annotation-mark" aria-hidden="true">↳</span> Результат: проверяемое замечание с понятным основанием.</p></article>
             </div>
+            <p class="sample-caption">Иллюстрация метода обучения. Для своей практики используйте документы, разрешённые к такой обработке.</p>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <footer>
-    <div class="container foot">
-      <div>© Проект без хаоса · AI-ассистенты для проектирования ПГС</div>
-      <div>ask.kozurev@gmail.com · +7 950 772-64-11</div>
-    </div>
-  </footer>
-
-  <script>
-    var header = document.getElementById('site-header');
-    function onScroll() { if (window.scrollY > 12) header.classList.add('scrolled'); else header.classList.remove('scrolled'); }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-
-    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if ('IntersectionObserver' in window && !reduced) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-      document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
-    } else {
-      document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
-    }
-  </script>
+    </section>
+    <section class="section container program-section" id="program" aria-labelledby="program-title">
+      <div class="section-heading"><p class="eyebrow">03 / Программа 00–05</p><h2 id="program-title">От первого запроса<br><span class="muted">к своему ассистенту.</span></h2><p class="section-intro">Подготовка перед стартом и пять последовательных модулей. В каждом — практика, проверка и результат, который остаётся у вас.</p></div>
+      <div class="program-list">
+        <details class="module module-prep"><summary><span class="module-number">00</span><span class="module-heading"><span class="module-kicker">Перед первым занятием</span><span class="module-title">Подготовка к обучению</span></span><span class="module-date">До старта</span><span class="expand-mark" aria-hidden="true"></span></summary><div class="module-body"><ul><li>Проверим необходимые аккаунты и инструменты.</li><li>Разберём условия работы с документами.</li><li>Подготовим разрешённые исходные материалы для практики.</li></ul><p class="module-result"><span>На выходе</span>Готовое рабочее место и понимание, что понадобится к первому занятию.</p></div></details>
+        <details class="module" open><summary><span class="module-number">01</span><span class="module-heading"><span class="module-kicker">Возможности и ограничения</span><span class="module-title">Находим задачи для ИИ в своей работе</span></span><time class="module-date" datetime="2026-11-28">28 ноября</time><span class="expand-mark" aria-hidden="true"></span></summary><div class="module-body"><ul><li>Поймём, какие операции имеет смысл передавать модели.</li><li>Поработаем с документами и контекстом задачи.</li><li>Определим ограничения и критерии проверки.</li><li>Составим личную стратегию применения ИИ.</li></ul><p class="module-result"><span>На выходе</span>Список ваших рабочих задач и критерии, по которым вы примете результат.</p></div></details>
+        <details class="module"><summary><span class="module-number">02</span><span class="module-heading"><span class="module-kicker">Запрос и проверка</span><span class="module-title">Ставим задачу и проверяем ответ</span></span><time class="module-date" datetime="2026-12-05">5 декабря</time><span class="expand-mark" aria-hidden="true"></span></summary><div class="module-body"><ul><li>Соберём исходные данные и сформулируем запрос.</li><li>Научимся уточнять неизвестное и исправлять ошибки.</li><li>Продолжим длинную работу, сохраняя контекст.</li><li>Зафиксируем удачный способ решения.</li></ul><p class="module-result"><span>На выходе</span>Проверенный запрос, принятый результат и запись порядка работы.</p></div></details>
+        <details class="module"><summary><span class="module-number">03</span><span class="module-heading"><span class="module-kicker">Постоянные инструкции</span><span class="module-title">Настраиваем своего ассистента</span></span><time class="module-date" datetime="2026-12-12">12 декабря</time><span class="expand-mark" aria-hidden="true"></span></summary><div class="module-body"><ul><li>Создадим проект в Claude.</li><li>Разделим постоянную инструкцию и данные текущей задачи.</li><li>Добавим общие материалы и контрольные примеры.</li><li>Сохраним версию настройки для повторного использования.</li></ul><p class="module-result"><span>На выходе</span>Ассистент для одного повторяющегося рабочего процесса.</p></div></details>
+        <details class="module"><summary><span class="module-number">04</span><span class="module-heading"><span class="module-kicker">Документы и источники</span><span class="module-title">Добавляем базу знаний</span></span><time class="module-date" datetime="2026-12-19">19 декабря</time><span class="expand-mark" aria-hidden="true"></span></summary><div class="module-body"><ul><li>Подготовим документы и заведём реестр источников.</li><li>Проверим, что ассистент прочитал материалы.</li><li>Поработаем с поиском и исследованием пробелов.</li><li>Проверим ответы по документам и основаниям.</li></ul><p class="module-result"><span>На выходе</span>Подготовленная база знаний и порядок проверки ответов по источникам.</p></div></details>
+        <details class="module"><summary><span class="module-number">05</span><span class="module-heading"><span class="module-kicker">Практика проектирования</span><span class="module-title">Применяем ассистента в работе</span></span><time class="module-date" datetime="2026-12-26">26 декабря</time><span class="expand-mark" aria-hidden="true"></span></summary><div class="module-body"><ul><li>Подготовим крупный чертёж к чтению и проверке.</li><li>Составим текст по чертежам и разберём расчётную задачу.</li><li>Проверим согласованность разделов.</li><li>Сохраним рабочую настройку и её отдельную копию.</li></ul><p class="module-result"><span>На выходе</span>Рабочий проект ассистента, реестр документов и проверенный результат.</p></div></details>
+      </div>
+    </section>
+    <section class="section container" id="format" aria-labelledby="format-title">
+      <div class="section-heading"><p class="eyebrow">04 / Как учимся</p><h2 id="format-title">Пять суббот.<br><span class="muted">Одна рабочая система.</span></h2><p class="section-intro">С 28 ноября по 26 декабря. Встречаемся в Zoom с 10:00 до 13:00 по московскому времени.</p></div>
+      <ol class="calendar" aria-label="Расписание занятий"><li><span>01 / Суббота</span><time datetime="2026-11-28T10:00:00+03:00">28<span>ноября</span></time><span>Задачи для ИИ</span></li><li><span>02 / Суббота</span><time datetime="2026-12-05T10:00:00+03:00">05<span>декабря</span></time><span>Запрос и ответ</span></li><li><span>03 / Суббота</span><time datetime="2026-12-12T10:00:00+03:00">12<span>декабря</span></time><span>Свой ассистент</span></li><li><span>04 / Суббота</span><time datetime="2026-12-19T10:00:00+03:00">19<span>декабря</span></time><span>База знаний</span></li><li><span>05 / Суббота</span><time datetime="2026-12-26T10:00:00+03:00">26<span>декабря</span></time><span>Рабочая практика</span></li></ol>
+      <div class="calendar-footer"><span>Все занятия — 10:00–13:00 МСК</span><a class="text-link" href="course-schedule.ics" download>Добавить в календарь <span aria-hidden="true">↓</span></a></div>
+      <div class="format-grid"><article><span class="eyebrow">На занятиях</span><h3>Практика и живой разбор</h3><p>20–30 минут каждого занятия — вопросы и разбор заданий. Остальное время работаем по теме модуля.</p></article><article><span class="eyebrow">Между встречами</span><h3>Вашу работу проверят</h3><p>Евгений проверяет ДЗ каждого участника в течение трёх рабочих дней. В учебной Telegram-группе можно задавать вопросы по ходу работы.</p></article><article><span class="eyebrow">После пяти недель</span><h3>Связь остаётся</h3><p>Группа выпускников для вопросов, обратной связи и предложений. Методички — бессрочно, записи — до 26 июня 2027 года.</p></article></div>
+    </section>
+    <section class="section materials-section" aria-labelledby="materials-title"><div class="container materials-layout">
+      <div><p class="eyebrow">05 / Что остаётся у вас</p><h2 id="materials-title">Не только знания.<br><span class="muted">Своя настройка.</span></h2><p class="section-intro">К концу курса у вас будет основа ассистента для выбранного рабочего процесса и понятный способ проверки его ответов.</p><dl class="access-list"><div><dt>Методички 00–05</dt><dd>Бессрочный персональный просмотр на Google Диске, без скачивания, копирования и печати.</dd></div><div><dt>Записи пяти занятий</dt><dd>Доступ до 26 июня 2027 года. Можно вернуться к разбору и повторить действия.</dd></div><div><dt>Запросы и рабочие формы</dt><dd>Отдельные тексты в Telegram, которые удобно копировать в свою работу.</dd></div></dl></div>
+      <div class="assistant-map" aria-label="Состав вашего ассистента"><div class="map-head"><span class="eyebrow">Ваш рабочий проект</span><span aria-hidden="true">↗</span></div><div class="map-row"><span class="map-number">01</span><span>Постоянная инструкция</span><span class="map-detail">Как работать</span></div><div class="map-row"><span class="map-number">02</span><span>База знаний</span><span class="map-detail">На что опираться</span></div><div class="map-row"><span class="map-number">03</span><span>Реестр источников</span><span class="map-detail">Где проверить</span></div><div class="map-row"><span class="map-number">04</span><span>Контрольный пример</span><span class="map-detail">Как принять результат</span></div><div class="map-connector" aria-hidden="true">↓</div><div class="map-output"><span class="eyebrow">Результат курса</span><span>Ассистент<br>под вашу задачу</span><svg viewBox="0 0 80 80" fill="none" aria-hidden="true"><path d="M12 60V20h28v40H12Zm28-40 28-8v40l-28 8M12 20l28-8h28M22 33h9M22 43h9M50 29l9-3M50 39l9-3" stroke="currentColor" stroke-width="1.2"/></svg></div></div>
+    </div></section>
+    <section class="section container teacher-section" id="teacher" aria-labelledby="teacher-title"><div class="teacher-monogram" aria-hidden="true"><span class="eyebrow">Автор / ведущий</span><span class="monogram">ЕК</span><span class="monogram-bottom">Проектирование × искусственный интеллект</span></div><div class="teacher-copy"><p class="eyebrow">06 / Кто ведёт</p><h2 id="teacher-title">Евгений<br>Коцур</h2><p class="teacher-lead">Один ведущий.<br>Последовательная работа с вашей задачей.</p><p>Вместе пройдём путь от первого запроса до ассистента с инструкцией и базой знаний. Я веду занятия, проверяю домашние работы каждого участника и отвечаю на вопросы в группе.</p><a class="text-link" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener noreferrer">Задать вопрос Евгению <span aria-hidden="true">↗</span></a></div></section>
+    <section class="section enroll-section" id="enroll" aria-labelledby="enroll-title"><div class="container">
+      <div class="section-heading"><p class="eyebrow">07 / Участие в потоке</p><h2 id="enroll-title">Пора перейти<br><span class="muted">от интереса к практике.</span></h2><p class="section-intro">Старт 28 ноября. До 15 участников, пять живых занятий и работа с вашими задачами.</p></div>
+      <div class="enroll-layout">
+        <div class="price-panel"><div class="price-top"><span class="eyebrow">Весь курс / 5 недель</span><span class="price-label">Поток 2026</span></div><p class="price">19 900 <span>₽</span></p><p class="price-caption">Первые пять оплаченных мест</p><div class="next-price"><span>Следующие десять мест</span><span>24 900 ₽</span></div><ul class="included-list"><li>15 часов в Zoom и записи на шесть месяцев</li><li>Проверка домашних работ каждого участника</li><li>Разборы на занятиях и учебная Telegram-группа</li><li>Методички с бессрочным просмотром</li><li>Группа выпускников после обучения</li></ul><p class="price-note">Цена зависит от очередности подтверждённых оплат. Перед выставлением счёта Евгений подтвердит наличие места и его стоимость.</p></div>
+        <div class="enroll-form-panel"><h3>Начнём с заявки.</h3><p class="form-intro">Подготовьте сообщение и отправьте его Евгению в Telegram. Он подтвердит место и пришлёт условия участия и счёт.</p>
+          <form id="enrollment-form" hidden>
+            <fieldset class="interest-options"><legend>Что вас интересует?</legend><label><input type="radio" name="interest" value="course" checked><span>Курс с 28 ноября</span></label><label><input type="radio" name="interest" value="meeting"><span>Открытая встреча 21 ноября</span></label></fieldset>
+            <div class="field"><label for="participant-name">Как к вам обращаться</label><input id="participant-name" name="name" type="text" autocomplete="given-name" maxlength="80" required placeholder="Ваше имя"></div>
+            <div class="field"><label for="participant-question">Ваша задача или вопрос <span>(необязательно)</span></label><textarea id="participant-question" name="question" rows="2" maxlength="600" placeholder="Например, проверка замечаний по КЖ"></textarea></div>
+            <button class="button button-light button-full" type="submit">Подготовить заявку <span aria-hidden="true">↗</span></button>
+            <p class="form-note">Вы увидите текст и сможете изменить его перед отправкой в Telegram. Текст готовится в этой вкладке.</p>
+          </form>
+          <div class="draft-panel" id="draft-panel" hidden><h4 id="draft-heading" tabindex="-1">Заявка подготовлена</h4><p>Отправьте это сообщение Евгению, чтобы продолжить запись.</p><label class="sr-only" for="draft-text">Текст заявки</label><textarea id="draft-text" rows="6" readonly></textarea><a class="button button-light button-full" id="telegram-draft-link" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Открыть Telegram <span aria-hidden="true">↗</span></a><div class="draft-tools"><button class="text-link" id="copy-draft" type="button">Скопировать текст</button><button class="text-link" id="edit-draft" type="button">Изменить заявку</button></div><p class="draft-status" id="draft-status" role="status"></p><p class="form-note">Если Telegram открылся без текста, вставьте скопированную заявку в чат <a href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener noreferrer">@EvgeniyKotzur</a>.</p></div>
+          <div class="direct-contact"><a class="text-link" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener noreferrer">Написать в Telegram напрямую <span aria-hidden="true">↗</span></a><span>Или <a href="mailto:ask.kozurev@gmail.com?subject=Запись%20на%20курс%20по%20нейросетям">по электронной почте</a></span></div>
+        </div>
+      </div>
+      <ol class="payment-steps"><li><span>01</span><div><h3>Подтверждаем место</h3><p>Евгений отвечает на заявку, уточняет цену и присылает условия участия.</p></div></li><li><span>02</span><div><h3>Оплачиваете счёт</h3><p>После согласования условий — персональный счёт ЮKassa. После оплаты вы получаете чек самозанятого.</p></div></li><li><span>03</span><div><h3>Получаете доступ</h3><p>В течение рабочего дня после подтверждения оплаты — методички и приглашение в учебную группу.</p></div></li></ol>
+    </div></section>
+    <section class="section container faq-section" id="faq" aria-labelledby="faq-title"><div class="faq-heading"><p class="eyebrow">08 / Остались вопросы</p><h2 id="faq-title">До встречи<br><span class="muted">на занятиях.</span></h2><a class="text-link" href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener noreferrer">Спросить лично <span aria-hidden="true">↗</span></a></div><div class="faq-list">
+      <details><summary>Подойдёт ли курс, если я только пробовал чат?<span class="expand-mark" aria-hidden="true"></span></summary><p>Да. Начинаем с подготовки инструментов и постановки задачи, затем переходим к своему ассистенту и базе знаний. Для практики пригодятся ваши задачи из проектирования; программирование не требуется.</p></details>
+      <details><summary>Что нужно для обучения?<span class="expand-mark" aria-hidden="true"></span></summary><p>Компьютер с интернетом, Zoom, Telegram и Google-аккаунт для персонального доступа к методичкам. В подготовке разберём аккаунты ИИ-сервисов. До оплаты уточните у Евгения необходимые подписки и возможные дополнительные расходы.</p></details>
+      <details><summary>Что будет, если пропущу занятие?<span class="expand-mark" aria-hidden="true"></span></summary><p>Останется запись: доступ к записям пяти занятий — до 26 июня 2027 года. Вопросы по материалу можно задавать в учебной группе, а домашнюю работу сдавать на проверку.</p></details>
+      <details><summary>Как проверяются домашние работы?<span class="expand-mark" aria-hidden="true"></span></summary><p>Евгений проверяет работу каждого участника в течение трёх рабочих дней. На каждом занятии 20–30 минут отводится вопросам и групповому разбору заданий.</p></details>
+      <details><summary>Можно ли скачать PDF-методички?<span class="expand-mark" aria-hidden="true"></span></summary><p>Методички доступны для бессрочного просмотра на Google Диске по вашему Google-аккаунту. Скачивание, копирование и печать отключены. Готовые запросы и рабочие формы выдаются отдельно в Telegram для удобного копирования.</p></details>
+      <details><summary>Что останется после курса?<span class="expand-mark" aria-hidden="true"></span></summary><p>Ваш проект ассистента, инструкция, подготовленные источники и проверенные результаты. Методички остаются доступны бессрочно, записи — на шесть месяцев после окончания курса. Для вопросов и обратной связи будет группа выпускников в Telegram.</p></details>
+      <details id="terms"><summary>Как записаться, оплатить и уточнить условия возврата?<span class="expand-mark" aria-hidden="true"></span></summary><p>Отправьте заявку Евгению. До оплаты он подтвердит место, цену и предоставит условия участия, оплаты и возврата. Заявка сама по себе не закрепляет место. После подтверждения оплаты вы получаете чек и в течение рабочего дня — персональный доступ к методичкам и учебной группе. Для уточнения или возврата напишите <a href="mailto:ask.kozurev@gmail.com">ask.kozurev@gmail.com</a> или в <a href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener noreferrer">Telegram</a>.</p></details>
+    </div></section>
+    <section class="closing container" aria-label="Запись на курс"><p>Следующий рабочий инструмент<br><span class="muted">вы соберёте сами.</span></p><a class="button button-light" href="#enroll">Присоединиться к потоку <span aria-hidden="true">↗</span></a><span class="eyebrow">28.11 — 26.12 / 2026</span></section>
+  </main>
+  <footer class="site-footer container"><a class="footer-brand" href="#top">Евгений Коцур<span>Нейросети для проектирования</span></a><div class="footer-links"><a href="https://t.me/EvgeniyKotzur" target="_blank" rel="noopener noreferrer">Telegram ↗</a><a href="mailto:ask.kozurev@gmail.com">ask.kozurev@gmail.com</a><a href="#terms">Условия участия</a></div><div class="footer-bottom"><span>© 2026 Евгений Коцур</span><span>От чата до ассистента.</span><a href="#top">Наверх ↑</a></div></footer>
 </body>
 </html>

@@ -1,65 +1,99 @@
-// ============================================
-// Поведение страницы: валидация формы
-// ============================================
-// Плавный скролл по якорям — делает сам браузер
-// через CSS-свойство scroll-behavior: smooth
-// в style.css. JS-кода для скролла не нужно.
-
-document.addEventListener('DOMContentLoaded', () => {
-
-    const form = document.querySelector('.contact-form');
-    if (!form) return;
-
-    const errorBox = document.getElementById('form-error');
-    const fields = {
-        name: form.querySelector('#name'),
-        email: form.querySelector('#email'),
-        message: form.querySelector('#message')
+/* Учебный пример и локальная подготовка заявки. */
+(() => {
+  'use strict';
+  const workflow = document.querySelector('[data-workflow]');
+  if (workflow) {
+    const buttons = [...workflow.querySelectorAll('[data-step]')];
+    const panels = [...workflow.querySelectorAll('[data-panel]')];
+    const activate = (index) => {
+      buttons.forEach((button, position) => button.setAttribute('aria-pressed', String(position === index)));
+      panels.forEach((panel, position) => { panel.hidden = position !== index; });
     };
+    workflow.classList.add('workflow-enhanced');
+    activate(0);
+    buttons.forEach((button, index) => button.addEventListener('click', () => activate(index)));
+  }
 
-    // Простая проверка email — без перфекционизма,
-    // достаточно отсечь явные опечатки. Финальную
-    // валидацию всё равно делает Formspree.
-    const emailLooksValid = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  const form = document.getElementById('enrollment-form');
+  const draftPanel = document.getElementById('draft-panel');
+  if (!form || !draftPanel) return;
 
-    // Сброс подсветки ошибок при вводе
-    Object.values(fields).forEach((field) => {
-        field.addEventListener('input', () => {
-            field.classList.remove('is-invalid');
-            errorBox.textContent = '';
-        });
+  const nameField = document.getElementById('participant-name');
+  const questionField = document.getElementById('participant-question');
+  const draftField = document.getElementById('draft-text');
+  const draftHeading = document.getElementById('draft-heading');
+  const draftLink = document.getElementById('telegram-draft-link');
+  const draftStatus = document.getElementById('draft-status');
+  const cleanText = (value) => value.replace(/[\u0000-\u001f\u007f]/g, ' ').trim();
+
+  form.hidden = false;
+  nameField.addEventListener('input', () => nameField.setCustomValidity(''));
+
+  document.querySelectorAll('[data-interest]').forEach((link) => {
+    link.addEventListener('click', () => {
+      const option = [...form.querySelectorAll('input[name="interest"]')].find((input) => input.value === link.dataset.interest);
+      if (option) option.checked = true;
+      draftPanel.hidden = true;
+      form.hidden = false;
     });
+  });
 
-    form.addEventListener('submit', (event) => {
-        // Сначала собираем все ошибки, только потом решаем — пускать или блокировать
-        let firstError = '';
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const name = cleanText(nameField.value);
+    if (!name) {
+      nameField.setCustomValidity('Укажите имя, чтобы Евгений знал, как к вам обратиться.');
+      nameField.reportValidity();
+      return;
+    }
+    const meeting = new FormData(form).get('interest') === 'meeting';
+    const lines = [
+      'Здравствуйте, Евгений! Меня зовут ' + name + '.',
+      meeting
+        ? 'Хочу записаться на бесплатную открытую встречу 21 ноября 2026 года в 10:00 МСК по курсу «Нейросети для проектирования: от чата до ассистента».'
+        : 'Хочу записаться на курс «Нейросети для проектирования: от чата до ассистента» со стартом 28 ноября 2026 года. Подскажите наличие места, актуальную цену, условия участия и порядок оплаты через ЮKassa.'
+    ];
+    const question = cleanText(questionField.value);
+    if (question) lines.push('Моя задача или вопрос: ' + question);
+    const draft = lines.join('\n\n');
 
-        // имя
-        if (!fields.name.value.trim()) {
-            fields.name.classList.add('is-invalid');
-            firstError = firstError || 'Укажите имя.';
-        }
+    // Ввод пользователя выводится как текст. Никакой отправки на этом шаге нет.
+    draftField.value = draft;
+    const telegramUrl = new URL('https://t.me/EvgeniyKotzur');
+    telegramUrl.searchParams.set('text', draft);
+    draftLink.href = telegramUrl.href;
+    draftStatus.textContent = '';
+    form.hidden = true;
+    draftPanel.hidden = false;
+    draftPanel.scrollIntoView({ block: 'start', behavior: 'instant' });
+    draftHeading.focus({ preventScroll: true });
+  });
 
-        // email
-        const emailValue = fields.email.value.trim();
-        if (!emailValue) {
-            fields.email.classList.add('is-invalid');
-            firstError = firstError || 'Укажите email.';
-        } else if (!emailLooksValid(emailValue)) {
-            fields.email.classList.add('is-invalid');
-            firstError = firstError || 'Похоже, в email есть опечатка.';
-        }
+  document.getElementById('copy-draft').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(draftField.value);
+      draftStatus.textContent = 'Текст скопирован. Вставьте его в чат с Евгением.';
+    } catch {
+      draftField.focus();
+      draftField.select();
+      draftStatus.textContent = 'Текст выделен. Скопируйте его через меню устройства или Ctrl+C.';
+    }
+  });
 
-        // сообщение
-        if (!fields.message.value.trim()) {
-            fields.message.classList.add('is-invalid');
-            firstError = firstError || 'Напишите пару слов о задаче.';
-        }
+  document.getElementById('edit-draft').addEventListener('click', () => {
+    draftPanel.hidden = true;
+    form.hidden = false;
+    form.scrollIntoView({ block: 'start', behavior: 'instant' });
+    nameField.focus({ preventScroll: true });
+  });
 
-        if (firstError) {
-            event.preventDefault(); // блокируем отправку на Formspree
-            errorBox.textContent = firstError;
-        }
-        // если ошибок нет — браузер сам отправит форму на action из HTML
-    });
-});
+  // Ссылка из подвала раскрывает условия и при обычной навигации, и по прямому адресу.
+  const revealTerms = () => {
+    if (window.location.hash === '#terms') document.getElementById('terms').open = true;
+  };
+  window.addEventListener('hashchange', revealTerms);
+  document.querySelectorAll('a[href="#terms"]').forEach((link) => {
+    link.addEventListener('click', () => { document.getElementById('terms').open = true; });
+  });
+  revealTerms();
+})();
