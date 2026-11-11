@@ -2470,6 +2470,21 @@ summary:hover .module-title,summary:hover .expand-mark {
   border-top:1px solid var(--line)
 }
 
+.legal-data-item {
+  padding-block:24px;
+  border-top:1px solid var(--line)
+}
+
+.legal-data-item h3 {
+  margin-bottom:16px;
+  font-size:20px;
+  line-height:1.35
+}
+
+.legal-data-item p+p {
+  margin-top:12px
+}
+
 @media(max-width:800px) {
   .legal-layout {
     grid-template-columns:minmax(0,1fr);

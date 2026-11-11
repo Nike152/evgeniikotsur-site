@@ -8,7 +8,7 @@ import { execFileSync } from 'node:child_process';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const publicFiles = [
-  'index.html', 'offer.html', 'css/style.css', 'js/main.js', 'course-schedule.ics',
+  'index.html', 'offer.html', 'privacy.html', 'css/style.css', 'js/main.js', 'course-schedule.ics',
   'robots.txt', 'sitemap.xml', 'calc/index.html',
   'images/course-mark.svg', 'images/course-drawing.svg',
   'images/course-detail.svg', 'images/course-social.png'

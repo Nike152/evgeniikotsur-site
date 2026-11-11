@@ -63,11 +63,14 @@ def check_page(filename):
 source, page, references = check_page('index.html')
 offer_source, _, offer_references = check_page('offer.html')
 references += offer_references
+privacy_source, _, privacy_references = check_page('privacy.html')
+references += privacy_references
 
 assert all(text in source for text in ['19 900', '24 900', '2026-11-21T10:00:00+03:00', '2026-11-28T10:00:00+03:00', '26 июня 2027']), 'Не совпадают подтверждённые условия'
 assert '23 ноября' not in source, 'В лендинге осталась прежняя дата старта'
 assert 'drive.google.com' not in source, 'Платные материалы не должны быть публичной ссылкой'
 assert 'Черновик' not in offer_source and 'для утверждения' not in offer_source, 'В публичную оферту попали служебные пометки'
+assert 'Черновик' not in privacy_source and 'для утверждения' not in privacy_source, 'В публичную политику попали служебные пометки'
 
 for file in (ROOT / 'images').glob('course-*.svg'):
     ET.parse(file)

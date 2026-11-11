@@ -17,6 +17,7 @@ const allowed = new Map([
   ['/', ['index.html', 'text/html; charset=utf-8']],
   ['/index.html', ['index.html', 'text/html; charset=utf-8']],
   ['/offer.html', ['offer.html', 'text/html; charset=utf-8']],
+  ['/privacy.html', ['privacy.html', 'text/html; charset=utf-8']],
   ['/css/style.css', ['css/style.css', 'text/css; charset=utf-8']],
   ['/js/main.js', ['js/main.js', 'text/javascript; charset=utf-8']],
   ...previewFiles,
