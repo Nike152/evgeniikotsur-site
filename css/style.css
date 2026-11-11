@@ -2368,6 +2368,127 @@ summary:hover .module-title,summary:hover .expand-mark {
   }
 }
 
+/* Утверждённые документы: оглавление и спокойная колонка для чтения. */
+.enrollment-terms {
+  margin-block:18px 24px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6
+}
+
+.enrollment-terms a,.legal-content a {
+  color:var(--text);
+  text-decoration:underline;
+  text-underline-offset:3px
+}
+
+.legal-main {
+  padding-block:72px 80px
+}
+
+.legal-heading {
+  padding-bottom:48px;
+  border-bottom:1px solid var(--line)
+}
+
+.legal-heading>.eyebrow {
+  margin-top:48px
+}
+
+.legal-heading h1 {
+  max-width:12ch;
+  margin-top:24px;
+  font-size:clamp(46px,7vw,88px);
+  line-height:1.05;
+  letter-spacing:-.045em
+}
+
+.legal-intro {
+  max-width:640px;
+  margin-top:24px;
+  font-size:clamp(19px,2.4vw,26px);
+  line-height:1.4
+}
+
+.legal-version {
+  margin-top:24px;
+  color:var(--muted);
+  font-size:13px
+}
+
+.legal-layout {
+  display:grid;
+  grid-template-columns:230px minmax(0,760px);
+  column-gap:clamp(40px,7vw,112px);
+  padding-top:48px
+}
+
+.legal-nav {
+  position:sticky;
+  top:120px;
+  align-self:start;
+  color:var(--muted);
+  font-size:13px
+}
+
+.legal-nav ol {
+  padding-left:2.5ch;
+  list-style-type:decimal-leading-zero
+}
+
+.legal-nav li+li {
+  margin-top:16px
+}
+
+.legal-nav a:hover {
+  color:var(--text)
+}
+
+.legal-section {
+  margin-bottom:48px;
+  overflow-wrap:anywhere
+}
+
+.legal-section h2 {
+  margin-bottom:24px;
+  font-size:clamp(24px,2.6vw,32px);
+  line-height:1.2;
+  letter-spacing:-.025em
+}
+
+.legal-content p {
+  font-size:17px;
+  line-height:1.75
+}
+
+.legal-content p+p {
+  margin-top:20px
+}
+
+.legal-return {
+  padding-top:24px;
+  border-top:1px solid var(--line)
+}
+
+@media(max-width:800px) {
+  .legal-layout {
+    grid-template-columns:minmax(0,1fr);
+    gap:48px
+  }
+  .legal-nav {
+    position:static
+  }
+  .legal-main {
+    padding-top:40px
+  }
+  .legal-heading>.eyebrow {
+    margin-top:40px
+  }
+  .legal-content p {
+    font-size:16px
+  }
+}
+
 @media(prefers-reduced-motion:reduce) {
   html {
     scroll-behavior:auto
@@ -2425,6 +2546,32 @@ summary:hover .module-title,summary:hover .expand-mark {
     background:#fff
   }
   .footer-bottom {
+    color:#444
+  }
+  .legal-nav,.legal-return,.legal-heading>.text-link {
+    display:none
+  }
+  .legal-main {
+    padding:0
+  }
+  .legal-layout {
+    display:block;
+    padding-top:24pt
+  }
+  .legal-heading h1 {
+    font-size:32pt
+  }
+  .legal-section h2 {
+    break-after:avoid;
+    font-size:18pt
+  }
+  .legal-content p {
+    font-size:11pt
+  }
+  .legal-content a {
+    color:inherit
+  }
+  .legal-version {
     color:#444
   }
 }

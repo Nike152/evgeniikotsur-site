@@ -26,40 +26,48 @@ class Page(HTMLParser):
         self.stack.pop()
 
 
-source = (ROOT / 'index.html').read_text(encoding='utf-8')
-page = Page()
-page.feed(source)
-assert not page.stack, f'Незакрытые элементы: {page.stack}'
-ids = [attrs['id'] for _, attrs in page.nodes if 'id' in attrs]
-assert all(count == 1 for count in Counter(ids).values()), 'Повторяющиеся id'
-assert sum(tag == 'h1' for tag, _ in page.nodes) == 1, 'Нужен один главный заголовок'
+def check_page(filename):
+    source = (ROOT / filename).read_text(encoding='utf-8')
+    page = Page()
+    page.feed(source)
+    assert not page.stack, f'{filename}: незакрытые элементы: {page.stack}'
+    ids = [attrs['id'] for _, attrs in page.nodes if 'id' in attrs]
+    assert all(count == 1 for count in Counter(ids).values()), f'{filename}: повторяющиеся id'
+    assert sum(tag == 'h1' for tag, _ in page.nodes) == 1, f'{filename}: нужен один главный заголовок'
 
-references = 0
-for tag, attrs in page.nodes:
-    for name in ['href', 'src']:
-        if name not in attrs:
-            continue
-        link = urlsplit(attrs[name])
-        if link.scheme:
-            assert link.scheme in {'https', 'mailto'}, 'Недопустимая схема ссылки'
-        elif link.path:
-            target = (ROOT / unquote(link.path).lstrip('/')).resolve()
-            assert target.is_relative_to(ROOT) and target.is_file(), f'Нет файла: {link.path}'
-            references += 1
-        elif link.fragment:
-            assert unquote(link.fragment) in ids, f'Нет якоря: {link.fragment}'
-            references += 1
-    if tag == 'img':
-        assert attrs.get('alt') and attrs.get('width') and attrs.get('height'), 'Изображение без описания или размеров'
-    if attrs.get('target') == '_blank':
-        assert {'noopener', 'noreferrer'} <= set(attrs.get('rel', '').split()), 'Новая вкладка без защиты'
-    if 'aria-labelledby' in attrs:
-        assert all(item in ids for item in attrs['aria-labelledby'].split()), 'Неверная подпись раздела'
+    references = 0
+    for tag, attrs in page.nodes:
+        for name in ['href', 'src']:
+            if name not in attrs:
+                continue
+            link = urlsplit(attrs[name])
+            if link.scheme:
+                assert link.scheme in {'https', 'mailto'}, 'Недопустимая схема ссылки'
+            elif link.path:
+                target = (ROOT / unquote(link.path).lstrip('/')).resolve()
+                assert target.is_relative_to(ROOT) and target.is_file(), f'Нет файла: {link.path}'
+                references += 1
+            elif link.fragment:
+                assert unquote(link.fragment) in ids, f'{filename}: нет якоря: {link.fragment}'
+                references += 1
+        if tag == 'img':
+            assert attrs.get('alt') and attrs.get('width') and attrs.get('height'), 'Изображение без описания или размеров'
+        if attrs.get('target') == '_blank':
+            assert {'noopener', 'noreferrer'} <= set(attrs.get('rel', '').split()), 'Новая вкладка без защиты'
+        if 'aria-labelledby' in attrs:
+            assert all(item in ids for item in attrs['aria-labelledby'].split()), 'Неверная подпись раздела'
+    assert not any(tag == 'script' and not attrs.get('src') for tag, attrs in page.nodes), 'Найден встроенный скрипт'
+    return source, page, references
+
+
+source, page, references = check_page('index.html')
+offer_source, _, offer_references = check_page('offer.html')
+references += offer_references
 
 assert all(text in source for text in ['19 900', '24 900', '2026-11-21T10:00:00+03:00', '2026-11-28T10:00:00+03:00', '26 июня 2027']), 'Не совпадают подтверждённые условия'
 assert '23 ноября' not in source, 'В лендинге осталась прежняя дата старта'
 assert 'drive.google.com' not in source, 'Платные материалы не должны быть публичной ссылкой'
-assert not any(tag == 'script' and not attrs.get('src') for tag, attrs in page.nodes), 'Найден встроенный скрипт'
+assert 'Черновик' not in offer_source and 'для утверждения' not in offer_source, 'В публичную оферту попали служебные пометки'
 
 for file in (ROOT / 'images').glob('course-*.svg'):
     ET.parse(file)
