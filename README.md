@@ -38,6 +38,7 @@ Formspree не используется. Имена и вопросы готов
 
 ```powershell
 python scripts/check-site.py
+node --test scripts/build.test.mjs
 node --check js/main.js
 node scripts/build.mjs
 ```

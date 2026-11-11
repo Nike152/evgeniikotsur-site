@@ -1,5 +1,5 @@
 // В публикацию попадает только явный список общедоступных файлов.
-import { mkdir, copyFile, readdir } from 'node:fs/promises';
+import { mkdir, copyFile, readdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -27,7 +27,13 @@ await checkExisting(output);
 for (const file of files) {
   const destination = resolve(output, file);
   await mkdir(dirname(destination), { recursive: true });
-  await copyFile(resolve(root, file), destination);
+  if (file.endsWith('.png')) {
+    await copyFile(resolve(root, file), destination);
+  } else {
+    let content = (await readFile(resolve(root, file), 'utf8')).replace(/\r\n/g, '\n');
+    if (file.endsWith('.ics')) content = content.replace(/\n/g, '\r\n');
+    await writeFile(destination, content, 'utf8');
+  }
 }
 console.log('Готовая папка публикации: ' + output);
 console.log('Файлов: ' + files.length);

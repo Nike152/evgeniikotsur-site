@@ -1,0 +1,2 @@
+# Календарь сохраняет обязательные CRLF при передаче через Git и архивы.
+*.ics -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
