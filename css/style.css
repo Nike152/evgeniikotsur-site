@@ -1453,6 +1453,13 @@ summary:hover .module-title,summary:hover .expand-mark {
   font-size:12px
 }
 
+.footer-requisites {
+  margin-top:22px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.7
+}
+
 .footer-links {
   display:flex;
   gap:30px;
