@@ -6,9 +6,13 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const files = [
   'index.html', 'offer.html', 'privacy.html', 'css/style.css', 'js/main.js', 'course-schedule.ics',
-  'robots.txt', 'sitemap.xml', 'calc/index.html',
+  'robots.txt', 'sitemap.xml', 'calc/index.html', 'open-meeting.ics',
   'images/course-mark.svg', 'images/course-drawing.svg',
-  'images/course-detail.svg', 'images/course-social.png'
+  'images/course-detail.svg', 'images/course-social.png', 'images/course-studio.webp',
+  'images/author-work-1280.webp', 'images/author-work-2400.webp',
+  'images/author-portrait-600.webp', 'images/author-portrait-1200.webp',
+  'css/fonts.css', 'fonts/onest-regular.ttf', 'fonts/onest-medium.ttf',
+  'fonts/plex-mono.ttf', 'fonts/OFL-Onest.txt', 'fonts/OFL-PlexMono.txt'
 ];
 const output = resolve(root, 'dist', 'course');
 // Не публикуем случайно оставленные файлы и не удаляем их автоматически.
@@ -27,7 +31,7 @@ await checkExisting(output);
 for (const file of files) {
   const destination = resolve(output, file);
   await mkdir(dirname(destination), { recursive: true });
-  if (file.endsWith('.png')) {
+  if (/\.(?:png|webp|ttf)$/i.test(file)) {
     await copyFile(resolve(root, file), destination);
   } else {
     let content = (await readFile(resolve(root, file), 'utf8')).replace(/\r\n/g, '\n');

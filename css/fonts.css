@@ -1,0 +1,4 @@
+/* Локальные открытые шрифты; лицензии находятся в папке fonts. */
+@font-face{font-family:Onest;font-style:normal;font-weight:400;font-display:swap;src:url('../fonts/onest-regular.ttf') format('truetype')}
+@font-face{font-family:Onest;font-style:normal;font-weight:500;font-display:swap;src:url('../fonts/onest-medium.ttf') format('truetype')}
+@font-face{font-family:PlexMono;font-style:normal;font-weight:400;font-display:swap;src:url('../fonts/plex-mono.ttf') format('truetype')}

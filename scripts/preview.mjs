@@ -9,6 +9,7 @@ const serveBuild = process.argv.includes('--dist');
 const root = serveBuild ? resolve(projectRoot, 'dist', 'course') : projectRoot;
 const port = serveBuild ? 4318 : 4317;
 const previewFiles = serveBuild ? [] : [
+  ['/design/social-card.html', ['design/social-card.html', 'text/html; charset=utf-8']],
   ['/design/variant-b.html', ['design/variant-b.html', 'text/html; charset=utf-8']],
   ['/css/variant-b.css', ['css/variant-b.css', 'text/css; charset=utf-8']],
   ['/images/course-social.svg', ['images/course-social.svg', 'image/svg+xml']]
@@ -19,14 +20,18 @@ const allowed = new Map([
   ['/offer.html', ['offer.html', 'text/html; charset=utf-8']],
   ['/privacy.html', ['privacy.html', 'text/html; charset=utf-8']],
   ['/css/style.css', ['css/style.css', 'text/css; charset=utf-8']],
+  ['/css/fonts.css', ['css/fonts.css', 'text/css; charset=utf-8']],
+  ...['onest-regular.ttf', 'onest-medium.ttf', 'plex-mono.ttf'].map((file) => ['/fonts/' + file, ['fonts/' + file, 'font/ttf']]),
+  ...['OFL-Onest.txt', 'OFL-PlexMono.txt'].map((file) => ['/fonts/' + file, ['fonts/' + file, 'text/plain; charset=utf-8']]),
   ['/js/main.js', ['js/main.js', 'text/javascript; charset=utf-8']],
   ...previewFiles,
   ['/course-schedule.ics', ['course-schedule.ics', 'text/calendar; charset=utf-8']],
+  ['/open-meeting.ics', ['open-meeting.ics', 'text/calendar; charset=utf-8']],
   ['/robots.txt', ['robots.txt', 'text/plain; charset=utf-8']],
   ['/sitemap.xml', ['sitemap.xml', 'application/xml; charset=utf-8']],
   ['/calc/', ['calc/index.html', 'text/html; charset=utf-8']],
   ['/calc/index.html', ['calc/index.html', 'text/html; charset=utf-8']],
-  ...['course-drawing.svg', 'course-detail.svg', 'course-mark.svg', 'course-social.png'].map((file) => ['/images/' + file, ['images/' + file, file.endsWith('.png') ? 'image/png' : 'image/svg+xml']])
+  ...['course-drawing.svg', 'course-detail.svg', 'course-mark.svg', 'course-social.png', 'course-studio.webp', 'author-work-1280.webp', 'author-work-2400.webp', 'author-portrait-600.webp', 'author-portrait-1200.webp'].map((file) => ['/images/' + file, ['images/' + file, file.endsWith('.png') ? 'image/png' : file.endsWith('.webp') ? 'image/webp' : 'image/svg+xml']])
 ]);
 const server = createServer(async (request, response) => {
   if (!['GET', 'HEAD'].includes(request.method)) {

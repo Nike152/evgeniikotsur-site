@@ -1,0 +1,22 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Evgeniy Kotsur//Open Meeting 2026//RU
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Открытая встреча — нейросети для
+  проектирования
+BEGIN:VEVENT
+UID:open-meeting-20261121@evgeniikotsur.ru
+DTSTAMP:20261112T000000Z
+DTSTART:20261121T070000Z
+DTEND:20261121T080000Z
+SUMMARY:Нейросети для проектирования — откр
+ ытая встреча
+LOCATION:Онлайн
+DESCRIPTION:Бесплатная встреча с Евгением Коц
+ уром. 10:00–11:00 МСК. Учебный разбор чертежа
+ \, программа курса и ответы на вопросы. За
+ пись через сайт.
+URL:https://evgeniikotsur.ru/#meeting
+END:VEVENT
+END:VCALENDAR

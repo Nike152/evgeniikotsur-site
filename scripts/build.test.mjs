@@ -9,9 +9,13 @@ import { execFileSync } from 'node:child_process';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const publicFiles = [
   'index.html', 'offer.html', 'privacy.html', 'css/style.css', 'js/main.js', 'course-schedule.ics',
-  'robots.txt', 'sitemap.xml', 'calc/index.html',
+  'robots.txt', 'sitemap.xml', 'calc/index.html', 'open-meeting.ics',
   'images/course-mark.svg', 'images/course-drawing.svg',
-  'images/course-detail.svg', 'images/course-social.png'
+  'images/course-detail.svg', 'images/course-social.png', 'images/course-studio.webp',
+  'images/author-work-1280.webp', 'images/author-work-2400.webp',
+  'images/author-portrait-600.webp', 'images/author-portrait-1200.webp',
+  'css/fonts.css', 'fonts/onest-regular.ttf', 'fonts/onest-medium.ttf',
+  'fonts/plex-mono.ttf', 'fonts/OFL-Onest.txt', 'fonts/OFL-PlexMono.txt'
 ];
 
 test('сборка из LF и CRLF даёт одинаковые файлы и корректный календарь', async (context) => {
@@ -36,7 +40,7 @@ test('сборка из LF и CRLF даёт одинаковые файлы и �
       const destination = resolve(fixture, file);
       await mkdir(dirname(destination), { recursive: true });
       let bytes = await readFile(resolve(root, file));
-      if (!file.endsWith('.png')) {
+      if (!/\.(?:png|webp|ttf)$/i.test(file)) {
         bytes = Buffer.from(bytes.toString('utf8').replace(/\r?\n/g, ending));
       }
       await writeFile(destination, bytes);
@@ -48,8 +52,8 @@ test('сборка из LF и CRLF даёт одинаковые файлы и �
     const first = await readFile(resolve(fixtures[0], 'dist/course', file));
     const second = await readFile(resolve(fixtures[1], 'dist/course', file));
     assert.deepEqual(first, second, file + ' зависит от системы сборки');
-    if (file.endsWith('.png')) {
-      assert.deepEqual(first, await readFile(resolve(root, file)), 'PNG изменился при сборке');
+    if (/\.(?:png|webp|ttf)$/i.test(file)) {
+      assert.deepEqual(first, await readFile(resolve(root, file)), 'Бинарный ресурс изменился при сборке');
     }
   }
   const calendar = await readFile(resolve(fixtures[0], 'dist/course/course-schedule.ics'), 'utf8');

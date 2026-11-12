@@ -87,4 +87,13 @@ assert starts[0] == datetime(2026, 11, 28, 7) and starts[-1] == datetime(2026, 1
 assert len({line for line in calendar.splitlines() if line.startswith('UID:')}) == 5, 'UID занятий должны различаться'
 assert all(start.weekday() == 5 and start.hour == 7 and (end-start).total_seconds() == 10800 for start, end in zip(starts, ends)), 'Неверное время или длительность занятия'
 assert all((b-a).days == 7 for a, b in zip(starts, starts[1:])), 'Занятия должны быть еженедельными'
+
+# Открытая встреча подтверждена отдельно и не входит в пять занятий курса.
+meeting_bytes = (ROOT / 'open-meeting.ics').read_bytes()
+assert b'\r\n' in meeting_bytes, 'Календарь встречи должен использовать CRLF'
+assert all(len(line) <= 75 for line in meeting_bytes.split(b'\r\n')), 'Слишком длинная строка календаря встречи'
+meeting = meeting_bytes.decode('utf-8').replace('\r\n ', '')
+assert meeting.count('BEGIN:VEVENT') == 1, 'В календаре должна быть одна открытая встреча'
+assert 'DTSTART:20261121T070000Z' in meeting and 'DTEND:20261121T080000Z' in meeting, 'Встреча должна идти 21 ноября с 10:00 до 11:00 МСК'
+assert all(text in source for text in ['10:00–11:00 МСК', '20 лет', 'Claude Pro', '$20', '19 декабря']), 'Не совпадают подтверждённые сведения об опыте, встрече или подписке'
 print(f'Проверено: HTML, {references} внутренних ссылок, SVG, карта сайта, условия и календарь пяти занятий.')
