@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily private course registry snapshot
+
+[Timer]
+OnCalendar=*-*-* 06:00:00 Europe/Moscow
+Persistent=true
+AccuracySec=1min
+Unit=course-registry-backup-2026-11-28.service
+
+[Install]
+WantedBy=timers.target

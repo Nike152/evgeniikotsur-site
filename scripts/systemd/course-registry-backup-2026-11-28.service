@@ -1,0 +1,17 @@
+[Unit]
+Description=Private course registry snapshot
+After=local-fs.target
+
+[Service]
+Type=oneshot
+User=evgeniy
+UMask=0077
+ExecStart=/usr/bin/python3 /usr/local/libexec/course-registry-backup-2026-11-28.py
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ReadWritePaths=/var/lib/course-admin/2026-11-28/backups/daily
+RestrictAddressFamilies=AF_UNIX
+TimeoutStartSec=60
