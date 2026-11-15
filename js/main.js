@@ -29,10 +29,8 @@
   form.hidden = false;
   nameField.addEventListener('input', () => nameField.setCustomValidity(''));
 
-  document.querySelectorAll('[data-interest]').forEach((link) => {
+  document.querySelectorAll('[data-interest="course"]').forEach((link) => {
     link.addEventListener('click', () => {
-      const option = [...form.querySelectorAll('input[name="interest"]')].find((input) => input.value === link.dataset.interest);
-      if (option) option.checked = true;
       draftPanel.hidden = true;
       form.hidden = false;
     });
@@ -46,12 +44,9 @@
       nameField.reportValidity();
       return;
     }
-    const meeting = new FormData(form).get('interest') === 'meeting';
     const lines = [
       'Здравствуйте, Евгений! Меня зовут ' + name + '.',
-      meeting
-        ? 'Хочу записаться на бесплатную открытую встречу 21 ноября 2026 года с 10:00 до 11:00 МСК по курсу «Нейросети для проектирования: от чата до ассистента».'
-        : 'Хочу записаться на курс «Нейросети для проектирования: от чата до ассистента» со стартом 28 ноября 2026 года. Подскажите наличие места, актуальную цену, условия участия и порядок оплаты по счёту.'
+      'Хочу записаться на курс «Нейросети для проектирования: от чата до ассистента» со стартом 28 ноября 2026 года. Подскажите наличие места, актуальную цену, условия участия и порядок оплаты по счёту.'
     ];
     const question = cleanText(questionField.value);
     if (question) lines.push('Моя задача или вопрос: ' + question);

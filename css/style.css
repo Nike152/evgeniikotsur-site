@@ -4880,6 +4880,20 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
   margin-top:5px
 }
 
+.meeting-participation {
+  grid-column:1/-1;
+  display:grid;
+  gap:10px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.8
+}
+
+.meeting-participation a {
+  text-decoration:underline;
+  text-underline-offset:3px
+}
+
 .meeting-footer {
   grid-column:1/-1;
   display:flex;
