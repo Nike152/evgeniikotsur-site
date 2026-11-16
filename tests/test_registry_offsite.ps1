@@ -18,12 +18,12 @@ function Reset-Mock([string]$Mode = 'valid') {
     $script:FixtureMode = $Mode
     $script:HashCalls = 0
 }
-function Get-CourseRemoteHash {
+function Get-CourseSourceHash {
     $script:HashCalls++
     if ($script:FixtureMode -eq 'changed' -and $script:HashCalls -gt 1) { return ('0' * 64) }
     return $script:FixtureHash
 }
-function Copy-CourseRemoteFile([string]$Destination) {
+function Copy-CourseSourceFile([string]$Destination) {
     if ($script:FixtureMode -eq 'corrupt') { [IO.File]::WriteAllBytes($Destination, [byte[]](1, 2, 3)); return }
     [IO.File]::Copy($script:FixturePath, $Destination)
 }

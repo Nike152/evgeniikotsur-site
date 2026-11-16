@@ -2,12 +2,14 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)][string]$OutputRoot,
+    [string]$LocalSource,
     [switch]$Prune,
     [ValidateRange(1, 3650)][int]$RetentionDays = 14
 )
 
-# Сохраняем только реестр из согласованного SSH-подключения; пароли не запрашиваем.
+# Основной режим ноутбука получает локальный источник явно; прежний SSH-режим сохранён для истории.
 $ErrorActionPreference = 'Stop'
+$script:CourseRegistryLocalSource = $LocalSource
 $script:CourseRegistryRemote = '/var/lib/course-admin/2026-11-28/registry.xlsx'
 $script:CourseSshOptions = @('-o', 'BatchMode=yes', '-o', 'StrictHostKeyChecking=yes',
     '-o', 'PasswordAuthentication=no', '-o', 'KbdInteractiveAuthentication=no',
@@ -63,7 +65,21 @@ function Assert-CoursePrivateFolder([string]$Folder) {
     return $full
 }
 
-function Get-CourseRemoteHash {
+function Get-CourseLocalSource {
+    $source = [IO.Path]::GetFullPath($script:CourseRegistryLocalSource)
+    if ($source.StartsWith('\\') -or [IO.Path]::GetExtension($source) -ne '.xlsx' -or
+        -not (Test-Path -LiteralPath $source -PathType Leaf)) {
+        throw 'Нужен существующий локальный файл XLSX.'
+    }
+    $parent = Assert-CoursePrivateFolder ([IO.Path]::GetDirectoryName($source))
+    return (Assert-CourseLocalPath $source $parent)
+}
+
+function Get-CourseSourceHash {
+    if ($script:CourseRegistryLocalSource) {
+        $source = Get-CourseLocalSource
+        return (Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant()
+    }
     $ssh = Join-Path $env:WINDIR 'System32/OpenSSH/ssh.exe'
     $answer = @(& $ssh @script:CourseSshOptions 'dedal' '/usr/bin/sha256sum /var/lib/course-admin/2026-11-28/registry.xlsx' 2>&1)
     if ($LASTEXITCODE -ne 0 -or $answer.Count -ne 1 -or
@@ -73,7 +89,11 @@ function Get-CourseRemoteHash {
     return $Matches[1]
 }
 
-function Copy-CourseRemoteFile([string]$Destination) {
+function Copy-CourseSourceFile([string]$Destination) {
+    if ($script:CourseRegistryLocalSource) {
+        [IO.File]::Copy((Get-CourseLocalSource), $Destination)
+        return
+    }
     $scp = Join-Path $env:WINDIR 'System32/OpenSSH/scp.exe'
     $messages = @(& $scp '-q' @script:CourseSshOptions 'dedal:/var/lib/course-admin/2026-11-28/registry.xlsx' $Destination 2>&1)
     if ($LASTEXITCODE -ne 0) { throw 'Не удалось получить копию с VPS.' }
@@ -105,17 +125,22 @@ function Test-CourseLocalBook([string]$Path) {
 
 function Invoke-CourseLocalBackup([string]$Folder, [bool]$DoPrune, [int]$Days = 14) {
     $folderPath = Assert-CoursePrivateFolder $Folder
+    if ($script:CourseRegistryLocalSource -and
+        [string]::Equals([IO.Path]::GetDirectoryName((Get-CourseLocalSource)), $folderPath,
+            [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'Рабочий реестр и снимки должны находиться в разных каталогах.'
+    }
     $lockPath = Assert-CourseLocalPath (Join-Path $folderPath '.backup.lock') $folderPath
     $lock = [IO.File]::Open($lockPath, 'OpenOrCreate', 'ReadWrite', 'None')
     $temporary = $null
     try {
-        $before = Get-CourseRemoteHash
+        $before = Get-CourseSourceHash
         $temporary = Assert-CourseLocalPath (Join-Path $folderPath ('.pending-' + [guid]::NewGuid().ToString('N') + '.xlsx')) $folderPath
-        Copy-CourseRemoteFile $temporary
+        Copy-CourseSourceFile $temporary
         [void](Assert-CourseLocalPath $temporary $folderPath)
         Test-CourseLocalBook $temporary
         $copied = (Get-FileHash -LiteralPath $temporary -Algorithm SHA256).Hash.ToLowerInvariant()
-        $after = Get-CourseRemoteHash
+        $after = Get-CourseSourceHash
         if ($copied -ne $before -or $after -ne $before) { throw 'Источник изменился или контрольная сумма копии не совпала.' }
         $now = [datetime]::UtcNow
         $name = 'registry-' + $now.ToString('yyyyMMddTHHmmssZ') + '-' + [guid]::NewGuid().ToString('N').Substring(0, 8) + '.xlsx'
@@ -141,7 +166,9 @@ function Invoke-CourseLocalBackup([string]$Folder, [bool]$DoPrune, [int]$Days = 
         $result = [ordered]@{ checked_at_utc = $now.ToString('o'); snapshot = $name;
             bytes = (Get-Item -LiteralPath $target).Length; sha256 = $copied;
             source_modified = $false; prune_enabled = $DoPrune; retention_days = $Days;
-            minimum_snapshots = 14; deleted = $deleted; cloud_upload = $false }
+            minimum_snapshots = 14; deleted = $deleted; cloud_upload = $false;
+            source_location = $(if ($script:CourseRegistryLocalSource) { 'laptop' } else { 'vps' });
+            network_used = [bool](-not $script:CourseRegistryLocalSource) }
         $report = Assert-CourseLocalPath (Join-Path $folderPath 'last-success.json') $folderPath
         $result | ConvertTo-Json | Set-Content -LiteralPath $report -Encoding UTF8
         return [pscustomobject]$result
