@@ -22,7 +22,6 @@
   const questionField = document.getElementById('participant-question');
   const draftField = document.getElementById('draft-text');
   const draftHeading = document.getElementById('draft-heading');
-  const draftLink = document.getElementById('telegram-draft-link');
   const draftStatus = document.getElementById('draft-status');
   const cleanText = (value) => value.replace(/[\u0000-\u001f\u007f]/g, ' ').trim();
 
@@ -54,9 +53,6 @@
 
     // Ввод пользователя выводится как текст. Никакой отправки на этом шаге нет.
     draftField.value = draft;
-    const telegramUrl = new URL('https://t.me/EvgeniyKotzur');
-    telegramUrl.searchParams.set('text', draft);
-    draftLink.href = telegramUrl.href;
     draftStatus.textContent = '';
     form.hidden = true;
     draftPanel.hidden = false;
@@ -67,7 +63,7 @@
   document.getElementById('copy-draft').addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(draftField.value);
-      draftStatus.textContent = 'Текст скопирован. Вставьте его в чат с Евгением.';
+      draftStatus.textContent = 'Текст скопирован. Откройте MAX и вставьте его в личный чат с Евгением.';
     } catch {
       draftField.focus();
       draftField.select();

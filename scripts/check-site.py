@@ -69,6 +69,14 @@ references += privacy_references
 assert all(text in source for text in ['19 900', '24 900', '2026-11-21T10:00:00+03:00', '2026-11-28T10:00:00+03:00', '26 июня 2027']), 'Не совпадают подтверждённые условия'
 assert '23 ноября' not in source, 'В лендинге осталась прежняя дата старта'
 assert 'drive.google.com' not in source, 'Платные материалы не должны быть публичной ссылкой'
+max_contact = 'https://max.ru/u/f9LHodD0cOIU68h-HiZimr35EaPRvuUT0JCbWIXVLx1k7tuKN1WsIWpv5bM'
+for filename, public_source in [('index.html', source), ('offer.html', offer_source), ('privacy.html', privacy_source)]:
+    assert 'n1ke1508@yandex.ru' in public_source, f'{filename}: нет согласованной российской почты'
+    assert not any(value in public_source for value in ['t.me/', 'telegram.org', 'ask.kozurev@gmail.com', 'Google Диск', 'Google-аккаунт']), f'{filename}: остался прежний маршрут или способ доступа'
+assert max_contact in source and 'id="copy-draft"' in source, 'Нет согласованного контакта MAX или копирования заявки'
+assert 'id="max-contact-link"' in source and 'telegram-draft-link' not in source, 'Неверный контакт подготовленной заявки'
+assert "connect-src 'none'" in source and "form-action 'none'" in source, 'Ослаблена защита локальной заявки'
+assert 'https://legal.max.ru/pp' in privacy_source, 'Нет правил выбранного мессенджера'
 assert 'Черновик' not in offer_source and 'для утверждения' not in offer_source, 'В публичную оферту попали служебные пометки'
 assert 'Черновик' not in privacy_source and 'для утверждения' not in privacy_source, 'В публичную политику попали служебные пометки'
 
